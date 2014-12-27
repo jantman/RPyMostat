@@ -34,4 +34,3 @@ All of the separate components communicate with each other over ReST APIs, meani
 inputs, physical control outputs, and web interfaces can be replaced with any third-party code that
 conforms to the API.
 
-
