@@ -5,4 +5,4 @@ RPyMostat
 
 A python-based intelligent home thermostat, targeted at (but not requiring) the RaspberryPi and similar small computers.
 
-I've really only started some proof-of-concept work for some parts of this (see the [PoC branch](https://github.com/jantman/RaspberryPyMostat/tree/PoC) for that).
+I've really only started some proof-of-concept work for some parts of this (see the [PoC branch](https://github.com/jantman/RPyMostat/tree/PoC) for that).
