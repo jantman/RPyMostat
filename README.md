@@ -7,6 +7,8 @@ A python-based intelligent home thermostat, targeted at (but not requiring) the 
 
 I've really only started some proof-of-concept work for some parts of this (see the [PoC branch](https://github.com/jantman/RPyMostat/tree/PoC) for that).
 
+Note that I attempted something like this [a long time ago](https://github.com/jantman/tuxostat).
+
 See:
 
 * [Architecture.md](Architecture.md) for an overview of the architecture, and most of the documentation that currently exists.
