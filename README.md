@@ -7,7 +7,7 @@ A python-based intelligent home thermostat, targeted at the RaspberryPi.
 
 I've really only started some proof-of-concept work for some parts of this. See the PoC branch for that.
 
-See Archirecture.md for some planning...
+See [Archirecture.md](Architecture.md) for some planning...
 
 Relevant Links
 ---------------
