@@ -13,6 +13,14 @@ See:
 
 * [Architecture.md](Architecture.md) for an overview of the architecture, and most of the documentation that currently exists.
 * [DISCOVERY.md](DISCOVERY.md) for some information on service discovery
+* [PACKAGING.md](PACKAGING.md) for elaboration on how to package and distribute all this
+
+ToDo
+----
+
+* sphinx docs (and gh-pages for the site)
+* figure out packaging
+* decide on nomenclature for the various parts, and update docs to reflect it
 
 Features
 --------
@@ -43,21 +51,6 @@ My planned reference implementation of the system is:
     * [DS18B20](https://www.sparkfun.com/products/245) temperature sensor using GPIO
 * Master control process, web UI and a third temperature input on my desktop computer.
     * [DS18S20](https://www.sparkfun.com/products/retired/8366) temperature sensor connected via [DS9490R](http://www.maximintegrated.com/en/products/comms/ibutton/DS9490R.html) usb-to-1-wire adapter
-
-ToDo
-----
-
-* sphinx docs (and gh-pages for the site)
-* figure out packaging
-
-Packaging
----------
-
-I'm still trying to figure out how to package all of this, which I feel poses some challenges. Mainly:
-
-1. Do I want to consider this all one application, or should the [four main components](Architecture.md#overview) be treated as separate projects, and versioned and distributed separately? Which makes sense for people who will use them on separate devices?
-2. The main control process will have many more requirements than the others; what's easiest for deployment? This is really a non-issue for simple one-host deployments all on one device.
-3. Should the docs be separate or all in one place?
 
 Relevant Links
 ---------------
