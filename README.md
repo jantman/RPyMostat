@@ -12,6 +12,7 @@ Note that I attempted something like this [a long time ago](https://github.com/j
 See:
 
 * [Architecture.md](Architecture.md) for an overview of the architecture, and most of the documentation that currently exists.
+* [DISCOVERY.md](DISCOVERY.md) for some information on service discovery
 
 Features
 --------
