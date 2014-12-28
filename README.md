@@ -67,3 +67,6 @@ Relevant Links
 * https://www.adafruit.com/product/1012
 * http://www.projects.privateeyepi.com/home/temperature-gauge
 * http://m.instructables.com/id/Raspberry-Pi-Temperature-Humidity-Network-Monitor/
+* [serial_device2](https://pypi.python.org/pypi/serial_device2/1.0) - Extends serial.Serial to add methods such as auto discovery of available serial ports in Linux, Windows, and Mac OS X
+* [pyusbg2](https://pypi.python.org/pypi/pyusbg2) - PyUSB offers easy USB devices communication in Python. It should work without additional code in any environment with Python >= 2.4, ctypes and an pre-built usb backend library (currently, libusb 0.1.x, libusb 1.x, and OpenUSB).
+

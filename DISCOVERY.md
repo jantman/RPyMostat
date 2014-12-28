@@ -39,3 +39,11 @@ python-zeroconf
 * the examples actually run; I got them working on 2 separate machines, but only if the browser was started *before* the registration happened
 * some issues around logging (see [issue 15](https://github.com/jstasiak/python-zeroconf/issues/15))
 
+Other Options
+--------------
+
+* [anyMesh](https://github.com/AnyMesh/anyMesh-Python) - A multi-platform, decentralized, auto-discover and auto-connect mesh networking and messaging API
+* Twisted and UDP multicast?
+* [python-brisa UPnP framework](http://brisa.garage.maemo.org/doc/html/upnp/ssdp.html) SSDP Server
+* [mdns](https://github.com/svinota/mdns) - Python, no docs, no readme
+* [txbonjour](https://github.com/jdcumpson/txbonjour) - a Twisted plugin for Bonjour; looks simple, it might be the right thing if it works - based on pybonjour, so probably a no-go
