@@ -95,6 +95,8 @@ Some Technical Bits and Questions
   * If so, can we use pytest for it (unit tests)? looks like yes - [pytest-twisted](https://github.com/schmir/pytest-twisted), [pytest docs](http://pytest.org/latest/faq.html#how-does-pytest-relate-to-twisted-s-trial), [twisted's testing docs](https://twistedmatrix.com/documents/14.0.0/core/howto/trial.html) which focus on their unittest-like [trial](http://twistedmatrix.com/trac/wiki/TwistedTrial) framework ([also this](http://twistedmatrix.com/documents/14.0.0/core/development/policy/test-standard.html)), a [random blog post](http://www.mechanicalcat.net/richard/log/Python/Tips_for_Testing_Twisted) on testing Twisted without Trial.
   * Should we just do threading ourselves? If so, is there anything to help with the API?
   * How do we do integration tests?
+  * Flask [might](http://stackoverflow.com/a/22900255/211734) be able to do this, but [this](http://stackoverflow.com/a/24101692/211734) implies otherwise. It supports celery [but as a separate process](http://flask.pocoo.org/docs/0.10/patterns/celery/).
+  * Twisted [Klein](http://klein.readthedocs.org/en/latest/) might be the union of what I need; here's [a tutorial](http://tavendo.com/blog/post/going-asynchronous-from-flask-to-twisted-klein/).
 * Temperature and control daemons can probably be single-threaded, the logic there is pretty simple. Timeouts should do all we need.
   * [bottle](http://bottlepy.org/docs/dev/index.html) might be a simple option
 * Web UI can just be a normal webapp, all it does is provide a graphical interface to the decision engine API
