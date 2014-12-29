@@ -71,15 +71,38 @@ Some Technical Bits and Questions
 * Assuming we're going with the API-based model, unit tests should be simple. Integration and acceptance tests are another question.
 * __TODO:__ How to test the API server and client?
 * __TODO:__ How to test the separate services, in isolation from the server?
+  * just a concern for testing the API client. this should be simple enough.
 * __TODO:__ Try to find a strong unit testing framework for the web UI; we can deal with integration/acceptance testing later.
+  * [pytest-flask](https://pypi.python.org/pypi/pytest-flask) looks like it should handle things quite well
 * __TODO:__ Is there any way that we can generate (dynamically? code generation?) the API server and client? The web UI? Is there an existing web UI "thing" to just wrap a ReST API? Would this help testing?
+  * I know some of the python API clients I've worked with do this... I just need to figure out how, because it's an area I've never really looked into.
+  * Not sure how to handle this programmatically, as most ReST API tools are built to be part of a web application, which this isn't.
+  * [Flask API](https://github.com/tomchristie/flask-api) looks OK but development seems to have stopped and there are many issues
+  * [Restless](https://github.com/toastdriven/restless) a generic ReST "miniframework", intended for Python web frameworks
+  * A quick [Flask ReST API tutorial](http://blog.miguelgrinberg.com/post/designing-a-restful-api-with-python-and-flask) [and another](http://blog.luisrei.com/articles/flaskrest.html)
+  * [eve](http://python-eve.org/) a "ReST API framework in a box" using Flask, MongoDB and Redis.
+  * [Flask-restful](https://github.com/flask-restful/flask-restful) and its [quickstart](http://flask-restful.readthedocs.org/en/latest/quickstart.html)
+  * [raml](http://raml.org/) - RESTful API Modeling Language
+  * [architecting version-less APIs](http://urthen.github.io/2013/05/16/ways-to-version-your-api-part-2/)
+  * [web development with Twisted](http://twistedmatrix.com/trac/wiki/WebDevelopmentWithTwisted)
+  * [web services with twisted](http://zenmachine.wordpress.com/web-services-and-twisted/)
+  * [Building RESTful, Service-Oriented Architectures with Twisted](http://lanyrd.com/2012/pycon-za/syyfm/) video and slide deck
+  * [Twisted community code and add-ons](https://twistedmatrix.com/trac/wiki/ProjectsUsingTwisted)
+* Maybe a lot of this should use message queues instead of HTTP APIs. But we'd need a message broker, and AFAIK few of them are lightweight (though Celery supports Redis, RabbitMQ, or using MongoDB or SQLAlchemy).
 * __TODO:__ How do I do acceptance/integration testing with service discovery if I have this running (like, in my house) on my LAN? Just use some "system number" variable?
 * The main process will likely have to have a number of threads: API serving (ReST API), timer/cron for scheduling and comparing temp values to thresholds, main thread (am I missing anything?)
   * Should we use [Twisted](https://twistedmatrix.com/trac/)?
+  * If so, can we use pytest for it (unit tests)? looks like yes - [pytest-twisted](https://github.com/schmir/pytest-twisted), [pytest docs](http://pytest.org/latest/faq.html#how-does-pytest-relate-to-twisted-s-trial), [twisted's testing docs](https://twistedmatrix.com/documents/14.0.0/core/howto/trial.html) which focus on their unittest-like [trial](http://twistedmatrix.com/trac/wiki/TwistedTrial) framework ([also this](http://twistedmatrix.com/documents/14.0.0/core/development/policy/test-standard.html)), a [random blog post](http://www.mechanicalcat.net/richard/log/Python/Tips_for_Testing_Twisted) on testing Twisted without Trial.
   * Should we just do threading ourselves? If so, is there anything to help with the API?
-  * If so, can we use pytest for it (unit tests)? How do we do integration tests?
+  * How do we do integration tests?
 * Temperature and control daemons can probably be single-threaded, the logic there is pretty simple. Timeouts should do all we need.
+  * [bottle](http://bottlepy.org/docs/dev/index.html) might be a simple option
 * Web UI can just be a normal webapp, all it does is provide a graphical interface to the decision engine API
+* __TODO:__ what database to use?
+  * Mongo? [MongoEngine](http://mongoengine.org/) (mongo "orm")
+* Scheduling
+  * implement it from scratch?
+* Crazy thought: maybe adding an API onto the decision engine process is a bad idea. Maybe I should think a little less "tiny system" - maybe some sort of message queue is the right idea, or we should have a "main process" that simply stores data and provides a ReST API (and maybe the Web UI too?) and have a scheduling engine that's a separate thing?
 
 What the Processes Need to Do
 -----------------------------
@@ -132,3 +155,5 @@ From a threading or work-oriented model, this boils down to:
 2. ReST API
 3. Database(s)?
 4. Schedule determination and temperature evaluation (these could be triggered events based on a timer or some action/signal)
+
+Twisted supports scheduling/timeouts/repeating events, which seems like it could handle quite a bit of this.
