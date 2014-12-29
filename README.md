@@ -62,3 +62,73 @@ Relevant Links
 * [serial_device2](https://pypi.python.org/pypi/serial_device2/1.0) - Extends serial.Serial to add methods such as auto discovery of available serial ports in Linux, Windows, and Mac OS X
 * [pyusbg2](https://pypi.python.org/pypi/pyusbg2) - PyUSB offers easy USB devices communication in Python. It should work without additional code in any environment with Python >= 2.4, ctypes and an pre-built usb backend library (currently, libusb 0.1.x, libusb 1.x, and OpenUSB).
 
+Some Technical Bits and Questions
+----------------------------------
+
+* Sphinx and ReadTheDocs for docs (should start on this sooner rather than later).
+* TravisCI and pytest for testing. Might need to look into the special cases if we do a lot of threading, or use Twisted.
+* Web UI will probably use Flask, __TODO:__ but I need to figure out how easy it is to get that to just wrap an API.
+* Assuming we're going with the API-based model, unit tests should be simple. Integration and acceptance tests are another question.
+* __TODO:__ How to test the API server and client?
+* __TODO:__ How to test the separate services, in isolation from the server?
+* __TODO:__ Try to find a strong unit testing framework for the web UI; we can deal with integration/acceptance testing later.
+* __TODO:__ Is there any way that we can generate (dynamically? code generation?) the API server and client? The web UI? Is there an existing web UI "thing" to just wrap a ReST API? Would this help testing?
+* __TODO:__ How do I do acceptance/integration testing with service discovery if I have this running (like, in my house) on my LAN? Just use some "system number" variable?
+* The main process will likely have to have a number of threads: API serving (ReST API), timer/cron for scheduling and comparing temp values to thresholds, main thread (am I missing anything?)
+  * Should we use [Twisted](https://twistedmatrix.com/trac/)?
+  * Should we just do threading ourselves? If so, is there anything to help with the API?
+  * If so, can we use pytest for it (unit tests)? How do we do integration tests?
+* Temperature and control daemons can probably be single-threaded, the logic there is pretty simple. Timeouts should do all we need.
+* Web UI can just be a normal webapp, all it does is provide a graphical interface to the decision engine API
+
+What the Processes Need to Do
+-----------------------------
+
+### Web UI
+
+Just provide a pretty (or usable) wrapper around the decision engine API. Honestly I'd love it if this could be generated entirely dynamically - i.e. the decision engine's plugins know about some input data types, and the web UI knows how to render them. The web UI is just a pile of components, and pulls information about what it needs dynamically from the decision engine. That's really complicated to implement, but OTOH, I'm not sure how else we allow pluggable scheduling and decision modules.
+
+### Temperature Sensors
+
+Dead-simple:
+
+1. Process starts up, uses service discovery to find the decision engine.
+2. Registers itself with some sort of unique ID (hardware UUID, RaspberryPi serial number, etc.)
+3. Discovers available temperature sensors, and some sort of unique (never-changing) ID for each.
+4. Reads values from sensors, POST to decision engine API.
+5. Repeat #4 indefinitely. (if connection to decision engine goes away, start back at #1).
+
+### Relay/Physical Control Unit
+
+Also dead-simple:
+
+1. Process starts up, uses service discovery to find the decision engine.
+2. Registers itself with some sort of unique ID (hardware UUID, RaspberryPi serial number, etc.)
+3. Discovers available relay outputs and their states, assigns a unique ID to each.
+4. POST this information to the decision engine.
+5. Start a web server.
+6. Wait for an API request from the decision engine, which is either a GET (current status) or POST (set state).
+
+### Decision Engine / Master Control Process
+
+Here's where the complexity lies.
+
+* Run a web server for the ReST API used by the other services (including the Web UI).
+* Maintain database of all configuration and settings; versioning and ORM?
+* Ability to store configuration to push to other daemons (like temperature polling rate).
+* Keep (time-series?) database of historical data on temperature, system state, etc. (including data required for predictive system operation)
+* Determine the current and next (N) schedules.
+* Constantly (every N seconds) compare temperature data to current schedule and operate system accordingly
+* Re-read schedules whenever a change takes place
+* Show end-user current system state and upcoming schedules
+* Provide a plugin interface for schedule algorithms
+* Provide a plugin interface for decision (system run/stop) algorithms
+* Support third-party web UIs via its API, which needs to include support for the plug-in scheduling and decision algorithms (which exist only in this process, not the web UI)
+* Support versioning of ReST and internal APIs
+
+From a threading or work-oriented model, this boils down to:
+
+1. Main thread
+2. ReST API
+3. Database(s)?
+4. Schedule determination and temperature evaluation (these could be triggered events based on a timer or some action/signal)
