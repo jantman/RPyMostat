@@ -66,3 +66,30 @@ The one remaining question is how we handle namespaces. It would be logical to u
 and put this all under a `rpymostat` namespace (and this would allow us to forego underscores in package names, which are recommended against). What are the implications
 of this on extensability? If this is being designed with essentially a micro-service architecture, and to allow replacement of any given component, is it better to
 use different namespaces and consider each of these a totally different, separate thing?
+
+Decision
+--------
+
+[qwcode](https://github.com/qwcode) suggested using one repository and setuptools extras. I did some tests to make sure `pip` supports them correctly.
+
+Using the default `pip` on my machine, I had some issues. However, if I upgraded to the latest `pip` (6.0.3 at this time), most common requirement patterns worked fine:
+
+* `projectname[extra]`
+* `projectname[extra]>=X.Y.Z`
+* `projectname[extra] <massive version spec here, like: ">0.0.3,<0.0.6,!=0.0.4">`
+* `[-e] (git+git|git+https)://url#egg=projectname[extra]`
+* `[-e] (git+git|git+https)://url@<hash or branch or tag>#egg=projectname[extra]`
+* `-e /path/to/local/git/clone/of/projectname[extra]`
+
+The only supported specifiers that don't seem to handle installing the extras are:
+
+* `/path/to/local/git/clone/of/projectname[extra]` (note, without `-e`)
+* `file:///path/to/archive/of/project.zip[extra]`
+
+So, with this, my plan is going to be:
+
+* `rpymostat` - central, shared code and the decision engine ("hub"?)
+  * install as `rpymostat[hub]` for the hub dependencies (or install requirements file)
+* `rpymostat-webui`
+* `rpymostat-sensor`
+* `rpymostat-relays`
