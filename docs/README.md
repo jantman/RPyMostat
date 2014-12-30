@@ -11,7 +11,6 @@ See:
 
 * [Architecture.md](Architecture.md) for an overview of the architecture, and most of the documentation that currently exists.
 * [DISCOVERY.md](DISCOVERY.md) for some information on service discovery
-* [PACKAGING.md](PACKAGING.md) for elaboration on how to package and distribute all this
 
 ToDo
 ----
