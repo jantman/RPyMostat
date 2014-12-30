@@ -26,9 +26,9 @@ Note that I attempted something like this `a long time ago <https://github.com/j
 
 See:
 
+* `docs/README.md <docs/README.md>`_ for some overall WIP notes
 * `docs/Architecture.md <docs/Architecture.md>`_ for an overview of the architecture, and most of the documentation that currently exists.
 * `docs/DISCOVERY.md <docs/DISCOVERY.md>`_ for some information on service discovery
-* `docs/PACKAGING.md <docs/PACKAGING.md>`_ for elaboration on how to package and distribute all this
 
 Features
 --------
@@ -54,13 +54,13 @@ My planned reference implementation of the system is:
 
 * RaspberryPi physical control unit - USB relay output for control, and a temperature sensor, connecting via WiFi.
 
-    * `DS18B20 <https://www.sparkfun.com/products/245>`_ temperature sensor using GPIO
-    * For system control, either a `PiFace <https://www.sparkfun.com/products/11772>`_ or a `Phidgets 1014 <http://www.phidgets.com/products.php?product_id=1014>`_ USB 4 relay kit, both of which I already have.
+  * `DS18B20 <https://www.sparkfun.com/products/245>`_ temperature sensor using GPIO
+  * For system control, either a `PiFace <https://www.sparkfun.com/products/11772>`_ or a `Phidgets 1014 <http://www.phidgets.com/products.php?product_id=1014>`_ USB 4 relay kit, both of which I already have.
 
 * RaspberryPi temperature sensor in another room, connecting via WiFi.
 
-    * `DS18B20 <https://www.sparkfun.com/products/245>`_ temperature sensor using GPIO
+  * `DS18B20 <https://www.sparkfun.com/products/245>`_ temperature sensor using GPIO
 
 * Master control process, web UI and a third temperature input on my desktop computer.
 
-    * `DS18S20 <https://www.sparkfun.com/products/retired/8366>`_ temperature sensor connected via `DS9490R <http://www.maximintegrated.com/en/products/comms/ibutton/DS9490R.html>`_ usb-to-1-wire adapter
+  * `DS18S20 <https://www.sparkfun.com/products/retired/8366>`_ temperature sensor connected via `DS9490R <http://www.maximintegrated.com/en/products/comms/ibutton/DS9490R.html>`_ usb-to-1-wire adapter

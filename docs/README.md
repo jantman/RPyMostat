@@ -157,3 +157,67 @@ From a threading or work-oriented model, this boils down to:
 4. Schedule determination and temperature evaluation (these could be triggered events based on a timer or some action/signal)
 
 Twisted supports scheduling/timeouts/repeating events, which seems like it could handle quite a bit of this.
+
+Framework Considerations
+=========================
+
+There are essentially two options (aside from doing it all from scratch) that appear obvious:
+
+1. An async/event processing framework (Twisted) with ReST bolted on
+2. A web framework with async/event processing bolted on
+
+The main concerns/evaluation points that I can think of:
+
+* ReST API serving (data to/from the database, and shared/main thread memory)
+* Signals or some other sort of notification mechanism
+* Scheduled tasks
+* Database access from multiple threads (whatever we use as a datastore, and whatever we use as a TSDB)
+* test-ability (i.e. pytest, possibly something else to test the threading/network)
+
+Datastore
+==========
+
+NoSQL or document-object sounds good, since for the most part we're storing simple objects, but
+they may have arbitrary properties (plugins). And schema migrations are a pain. But I'm not sure
+how these work on tiny systems; Mongo is the most popular, but it's certainly not geared towards
+one node with a small amount of memory and CPU (and disk).
+
+TSDB
+=====
+
+We want to store historical data on temperatures, runs, etc. Initially we can just use something simple, but
+we'll probably want to find a good, optimized storage for this.
+
+Packaging
+==========
+
+[qwcode](https://github.com/qwcode) suggested using one repository and setuptools extras. I did some tests to make sure `pip` supports them correctly.
+
+Using the default `pip` on my machine, I had some issues. However, if I upgraded to the latest `pip` (6.0.3 at this time), most common requirement patterns worked fine:
+
+* `projectname[extra]`
+* `projectname[extra]>=X.Y.Z`
+* `projectname[extra] <massive version spec here, like: ">0.0.3,<0.0.6,!=0.0.4">`
+* `[-e] (git+git|git+https)://url#egg=projectname[extra]`
+* `[-e] (git+git|git+https)://url@<hash or branch or tag>#egg=projectname[extra]`
+* `-e /path/to/local/git/clone/of/projectname[extra]`
+
+The only supported specifiers that don't seem to handle installing the extras are:
+
+* `/path/to/local/git/clone/of/projectname[extra]` (note, without `-e`)
+* `file:///path/to/archive/of/project.zip[extra]`
+
+__Question:__ will this work with multiple extras? (i.e. `[hub,sensor,control]`)
+
+So, with this, my plan is going to be:
+
+* `rpymostat` - central, shared code and the decision engine ("hub"?)
+  * install as `rpymostat[hub]` (or via requirements files) for the hub dependencies
+* `rpymostat-webui` - separate repo, separate distribution
+* `rpymostat-sensor` - separate repo, separate distribution
+* `rpymostat-relays` - separate repo, separate distribution
+
+I haven't yet decided if I'm going to use [namespace packages](http://pythonhosted.org/setuptools/setuptools.html#namespace-packages). That would
+be more logical and elegant (i.e. `rpymostat.sensor` instead of `rpymostat_sensor`). My only reservation is if I'm claiming to have a pluggable
+architecture (i.e. the sensor, relay or web UI can be replaced with a third party one that just respects our API), maybe these things should be
+relatively separate in order to promote that?
