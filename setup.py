@@ -1,12 +1,18 @@
 from setuptools import setup
 from sys import version_info
 
+from rpymostat.version import VERSION
+
 with open('README.rst') as file:
     long_description = file.read()
 
 with open('CHANGES.rst') as file:
     long_description += '\n' + file.read()
 
+requirements = [
+    'Twisted>=14.0.0,<15.0.0',
+]
+    
 classifiers = [
     'Development Status :: 2 - Pre-Alpha',
     'License :: OSI Approved :: GNU Affero General Public License v3 or later (AGPLv3+)',
@@ -31,12 +37,11 @@ setup(
     author='Jason Antman',
     author_email='jason@jasonantman.com',
     packages=find_packages()
-    #scripts=['bin/foo'],
     url='http://github.com/jantman/RPyMostat/',
     license='AGPLv3+',
     description='A python-based intelligent home thermostat, targeted at (but not requiring) the RaspberryPi and similar small computers.',
     long_description=long_description,
-    install_requires=pyver_requires,
+    install_requires=requirements,
     extra_requires=extras,
     keywords="thermostat automation control temperature",
     classifiers=classifiers
