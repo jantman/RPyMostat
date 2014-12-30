@@ -82,10 +82,6 @@ Some Technical Bits and Questions
   * [Flask-restful](https://github.com/flask-restful/flask-restful) and its [quickstart](http://flask-restful.readthedocs.org/en/latest/quickstart.html)
   * [raml](http://raml.org/) - RESTful API Modeling Language
   * [architecting version-less APIs](http://urthen.github.io/2013/05/16/ways-to-version-your-api-part-2/)
-  * [web development with Twisted](http://twistedmatrix.com/trac/wiki/WebDevelopmentWithTwisted)
-  * [web services with twisted](http://zenmachine.wordpress.com/web-services-and-twisted/)
-  * [Building RESTful, Service-Oriented Architectures with Twisted](http://lanyrd.com/2012/pycon-za/syyfm/) video and slide deck
-  * [Twisted community code and add-ons](https://twistedmatrix.com/trac/wiki/ProjectsUsingTwisted)
 * Maybe a lot of this should use message queues instead of HTTP APIs. But we'd need a message broker, and AFAIK few of them are lightweight (though Celery supports Redis, RabbitMQ, or using MongoDB or SQLAlchemy).
 * __TODO:__ How do I do acceptance/integration testing with service discovery if I have this running (like, in my house) on my LAN? Just use some "system number" variable?
 * The main process will likely have to have a number of threads: API serving (ReST API), timer/cron for scheduling and comparing temp values to thresholds, main thread (am I missing anything?)
