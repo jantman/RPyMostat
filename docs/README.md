@@ -178,6 +178,19 @@ they may have arbitrary properties (plugins). And schema migrations are a pain. 
 how these work on tiny systems; Mongo is the most popular, but it's certainly not geared towards
 one node with a small amount of memory and CPU (and disk).
 
+I'm leaning towards Mongo, which some people say they have running on the RPi but I'm not sure about
+performance (the RPi is about as far from the target usage of Mongo as you can get):
+
+* [Emerson's Site | MongoDB + Raspberry Pi (without building anything!)](https://emersonveenstra.net/mongodb-raspberry-pi/)
+* [Raspberry Pi MongoDB Installation – The working guide! - Hardware_Hacks](http://c-mobberley.com/wordpress/2013/10/14/raspberry-pi-mongodb-installation-the-working-guide/) - build from source on RPi
+* [heimcontrol.js - Home automation in Node.js with Raspberry PI and Arduino](https://ni-c.github.io/heimcontrol.js/get-started.html) - source or some guy's 2.1.1 package
+* [ArduPi/mongodb-rpi at master · brice-morin/ArduPi](https://github.com/brice-morin/ArduPi/tree/master/mongodb-rpi)
+* [Installing mongodb on Raspberry Pi (using pre-compiled binaries) - Jonas Widriksson](http://www.widriksson.com/install-mongodb-raspberrypi/)
+* [skrabban/mongo-nonx86](https://github.com/skrabban/mongo-nonx86) - SPARC/ARM port of Mongo, but only 2.1.1
+* [SERVER-1811 ARM support - MongoDB](https://jira.mongodb.org/browse/SERVER-1811) - updated August 2014 with status, sounds like a long time coming
+* [Packages | Arch Linux ARM](http://archlinuxarm.org/packages?search=mongodb) - ArchLinux ARM has supposedly-working mongodb 2.6.6-1 and pymongo 2.7.2 packages
+* [mongoDB 2.6 and Node.js 0.10.29 on Raspberry Pi](http://andyfelong.com/2014/07/mongodb-2-6-and-nodejs-10-29-on-raspberry-pi-oh-joy/) - the old 2.1 stuff doesn't work on the Pi B+; the Arch packages work fine
+
 TSDB
 =====
 
