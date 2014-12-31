@@ -3,6 +3,8 @@ Twisted for RPyMostat
 
 This documents my initial tests for using [Twisted](https://twistedmatrix.com/) as the framework for the main/hub process.
 
+First, a really good [basic doc on Deferreds](http://ezyang.com/twisted/defer2.html) and a [not-so-short introduction to Asynchronous programming](http://krondo.com/blog/?p=1209).
+
 Twisted Basics
 ---------------
 
@@ -44,10 +46,22 @@ ReST API
 * [Klein](http://klein.readthedocs.org/en/latest/) a web micro-framework
 * [Going asynchronous: from Flask to Twisted Klein](http://tavendo.com/blog/post/going-asynchronous-from-flask-to-twisted-klein/)
 
+Klein
+------
+
+### Links
+
+* [some](https://github.com/SamuelMarks/cscie90-hw8/blob/baae8d648420c2cd8c07391a5bc425152a996af1/hw8/server.py) [other](https://github.com/rackerlabs/otter/blob/master/otter/rest/application.py) [projects](https://github.com/rackerlabs/otter/blob/master/otter/rest/otterapp.py) [appear](https://github.com/rackerlabs/otter/blob/master/otter/rest/admin.py) [to](https://github.com/therve/ersid/blob/1bc409851ee104ccef22ff4835daa00cdb29a8c2/ersid/rest.py) [use](https://github.com/armooo/jukebox/blob/24e41bb2d20aff6859c7133ca4d7fc37ad3eaba5/jukebox/httpd.py) [klein](https://github.com/radix/coverapi/blob/7611797095c5ffd35f21363bd7cdc4150c15fd6a/coverapi/httpapi.py) (in non-trivial ways)
+* [this blog post](http://tavendo.com/blog/post/mixing-web-and-wamp-code-with-twisted-klein/) was actually VERY helpful
+
 Signals
 --------
 
 * Signals or some other sort of notification mechanism
+
+### Links
+
+* [helga](https://github.com/shaunduncan/helga) uses [smokesignal](https://github.com/shaunduncan/smokesignal) quite nicely
 
 Scheduling
 -----------

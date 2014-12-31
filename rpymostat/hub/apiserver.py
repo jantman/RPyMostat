@@ -3,17 +3,20 @@ RPyMostat API Hub HTTP server
 """
 from klein import Klein
 
+    
+class HubAPIServer(object):
 
-class HubAPIServer(Object):
-
+    app = Klein()
+    
     def __init__(self):
-        app = Klein()
+        pass
 
     @app.route('/')
     def root(self, request):
         """ hello world for root resource """
         return "Hello, World!"
 
-    @property
-    def resource(self):
-        return self.app.resource()
+    @app.route('/<param>')
+    def paramed_url(self, request, param):
+        return "Got param '{p}' in argument".format(p=param)
+    

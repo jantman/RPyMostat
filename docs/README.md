@@ -5,7 +5,16 @@ RPyMostat
 
 A python-based intelligent home thermostat, targeted at (but not requiring) the RaspberryPi and similar small computers. (Originally "RaspberryPyMostat", for 'RaspberryPi Python Thermostat', but that's too long to reasonably name a Python package).
 
-Note that I attempted something like this [a long time ago](https://github.com/jantman/tuxostat).
+Especially since the introduction of the [Nest thermostat](http://en.wikipedia.org/w/index.php?title=Nest_Labs&redirect=no),
+a lot of people have attempted a project like this. I'd like to think that mine is different - perhaps more polished, perhaps it stores historical
+data in a real, logical way. Multiple temperatures are nice, and the pluggable scheduling and decision engines are something I haven't seen in
+any others yet. The completely open API, and the fact that some of the out-of-the-box components use it is new too. And after looking at some of
+the options out there, I think the idea of it being packaged and distributed properly is pretty novel too, as are my hopes for a platform-agnostic
+system; a lot of the options out there are really hardware-hacking projects, and I want to make software that works with as many hardware options
+as it can. But when it comes down to it, this is an idea that I tried [a long time ago](https://github.com/jantman/tuxostat) and never finished,
+and want to have another try at regardless of whether it does something unique or becomes just another one of the hundred pieces of software
+that do the same thing. I'm also going to be playing with some technology that I've never used before, so for me this is as much about learning
+and exploring as it is about producing a polished final codebase.
 
 See:
 
@@ -241,3 +250,18 @@ I haven't yet decided if I'm going to use [namespace packages](http://pythonhost
 be more logical and elegant (i.e. `rpymostat.sensor` instead of `rpymostat_sensor`). My only reservation is if I'm claiming to have a pluggable
 architecture (i.e. the sensor, relay or web UI can be replaced with a third party one that just respects our API), maybe these things should be
 relatively separate in order to promote that?
+
+That Temperature Thing
+=======================
+
+Yup, I've got a million links and they're all about system architecture and frameworks
+and implementation details, and nothing about what this thing actually does. So here's some links:
+
+* [Raspberry Pi Thermostat Part 1: System Overview - The Nooganeer](http://www.nooganeer.com/his/projects/homeautomation/raspberry-pi-thermostat-part-1-overview/)
+* [Willseph/RaspberryPiThermostat](https://github.com/Willseph/RaspberryPiThermostat)
+* [python - Thermostat Control Algorithms - Stack Overflow](http://stackoverflow.com/questions/8651063/thermostat-control-algorithms)
+* [VE2ZAZ - Smart Thermostat on the Raspberry Pi](http://ve2zaz.net/RasTherm/RasTherm.htm)
+* [Raspberry Pi • View topic - Web enabled thermostat project](http://www.raspberrypi.org/forums/viewtopic.php?f=37&t=24115)
+* [Rubustat - the Raspberry Pi Thermostat | Wyatt Winters | Saving the world one computer at a time](http://wyattwinters.com/rubustat-the-raspberry-pi-thermostat.html)
+* [Makeatronics: Raspberry Pi Thermostat Hookups](http://makeatronics.blogspot.com/2013/04/raspberry-pi-thermostat-hookups.html)
+* [Makeatronics: Thermostat Software](http://makeatronics.blogspot.com/2013/04/thermostat-software.html)
