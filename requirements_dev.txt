@@ -1,0 +1,12 @@
+Twisted==14.0.2
+Werkzeug==0.9.6
+enum34==1.0.4
+klein==14.0.0
+mock==1.0.1
+netifaces==0.10.4
+nose==1.3.4
+pybonjour==1.1.1
+-e git+git@github.com:jantman/RPyMostat.git@c68d32c672f3aa4da1f6b4b1962a9537767f44c8#egg=rpymostat-TwistedTest
+six==1.8.0
+-e git+git@github.com:jantman/python-zeroconf.git@e76e2ccb965845911acdb426f022474af4e95da5#egg=zeroconf-more_logging
+zope.interface==4.1.2

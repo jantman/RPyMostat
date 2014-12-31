@@ -16,9 +16,20 @@ See:
 ToDo
 ----
 
-* sphinx docs (and gh-pages for the site)
-* figure out packaging
-* decide on nomenclature for the various parts, and update docs to reflect it
+1. get a very basic framework of an app, with HTTP, DB access, and some signals that also hit the DB - just a skeleton
+1. get complete test coverage for it
+1. add in the discovery broadcast and some timers
+1. complete coverage
+1. logging
+1. start the sphinx docs - make sure code docs work, and then just document-as-I-go the rest; figure out nomenclature for everything
+1. figure out how to document the API
+1. more code, get at least some stuff working with integration testing
+1. Puppet module to install it (and dependencies?), Vagrant machine for testing
+1. run it on an RPi
+1. integration and functional tests
+1. working prototype
+1. temperature and relay devices
+1. quick-and-dirty web interface in Flask
 
 Features
 --------

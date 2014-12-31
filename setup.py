@@ -1,4 +1,4 @@
-from setuptools import setup
+from setuptools import setup, find_packages
 from sys import version_info
 
 from rpymostat.version import VERSION
@@ -11,6 +11,7 @@ with open('CHANGES.rst') as file:
 
 requirements = [
     'Twisted>=14.0.0,<15.0.0',
+    'klein',
 ]
     
 classifiers = [
@@ -36,7 +37,7 @@ setup(
     version=VERSION,
     author='Jason Antman',
     author_email='jason@jasonantman.com',
-    packages=find_packages()
+    packages=find_packages(),
     url='http://github.com/jantman/RPyMostat/',
     license='AGPLv3+',
     description='A python-based intelligent home thermostat, targeted at (but not requiring) the RaspberryPi and similar small computers.',
