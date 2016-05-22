@@ -34,3 +34,26 @@ AUTHORS:
 Jason Antman <jason@jasonantman.com> <http://www.jasonantman.com>
 ##################################################################################
 """
+
+import abc # noqa
+import logging
+
+from rpymostat.engine.site_hierarchy import SiteHierarchy
+from rpymostat.engine.api.v1.sensors import Sensors
+from rpymostat.engine.api.v1.status import Status
+
+logger = logging.getLogger(__name__)
+
+
+class APIv1(SiteHierarchy):
+    """
+    Implementation of API v1. All pieces of the v1 API are initialized here,
+    and routes are setup.
+    """
+
+    prefix_part = 'v1'
+
+    def setup_routes(self):
+        """Setup routes for subparts of the hierarchy."""
+        Sensors(self.app, self.prefix).setup_routes()
+        Status(self.app, self.prefix).setup_routes()

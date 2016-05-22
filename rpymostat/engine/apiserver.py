@@ -34,3 +34,44 @@ AUTHORS:
 Jason Antman <jason@jasonantman.com> <http://www.jasonantman.com>
 ##################################################################################
 """
+
+from klein import Klein
+import logging
+import abc
+
+from rpymostat.engine.api.v1 import APIv1
+
+logger = logging.getLogger(__name__)
+
+
+class APIServer(object):
+    """
+    Main class for the Klein-based API server.
+    """
+
+    app = Klein()
+
+    def __init__(self):
+        """
+        Initialize API Server. Mainly just instantiates the API version classes
+        (currently just :py:class:`~.APIv1`) and sets up any global/top-level
+        routes.
+        """
+        # initialize top-level routes first
+        self.app.route('/')(self.handle_root)
+        APIv1(self.app, []).setup_routes()
+
+    def handle_root(self, _self, request):
+        """
+        root resource (/) request handler. This should only be called by
+        the Kelin app as a route.
+
+        @TODO this should return some helpful information, like the server
+        version and a link to the docs, as well as where to obtain the source
+        code and a link to the status page.
+
+        :param _self: another reference to ``self``, sent by Klein.
+        :param request: the Request
+        :type request: instance of :py:class:`twisted.web.server.Request`
+        """
+        return "Hello, World!"

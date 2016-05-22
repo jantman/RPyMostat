@@ -34,3 +34,34 @@ AUTHORS:
 Jason Antman <jason@jasonantman.com> <http://www.jasonantman.com>
 ##################################################################################
 """
+
+import abc # noqa
+import logging
+
+from rpymostat.engine.site_hierarchy import SiteHierarchy
+
+logger = logging.getLogger(__name__)
+
+
+class Status(SiteHierarchy):
+    """
+    Manages the v1/status portion of the API.
+    """
+
+    prefix_part = 'status'
+
+    def setup_routes(self):
+        """Setup routes for subparts of the hierarchy."""
+        self.add_route(self.status)
+
+    def status(self, _self, request):
+        """
+        Handle application status request.
+
+        @TODO this should be meaningful JSON.
+
+        :param _self: another reference to ``self`` sent by Klein
+        :param request: the Request
+        :type request: instance of :class:`twisted.web.server.Request`
+        """
+        return "Status: Running"

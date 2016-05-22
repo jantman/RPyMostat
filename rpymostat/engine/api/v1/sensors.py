@@ -34,3 +34,46 @@ AUTHORS:
 Jason Antman <jason@jasonantman.com> <http://www.jasonantman.com>
 ##################################################################################
 """
+
+import abc # noqa
+import logging
+
+from rpymostat.engine.site_hierarchy import SiteHierarchy
+
+logger = logging.getLogger(__name__)
+
+
+class Sensors(SiteHierarchy):
+    """
+    Manages the v1/sensors portion of the API.
+    """
+
+    prefix_part = 'sensors'
+
+    def setup_routes(self):
+        """Setup routes for subparts of the hierarchy."""
+        self.add_route(self.update, 'update', methods=['POST'])
+        # /sensors returns a list
+        self.add_route(self.list)
+
+    def list(self, _self, request):
+        """
+        @TODO Handle list sensors
+
+        :param _self: another reference to ``self`` sent by Klein
+        :param request: the Request
+        :type request: instance of :class:`twisted.web.server.Request`
+        """
+        return "sensor list"
+
+    def update(self, _self, request):
+        """
+        @TODO Handle sensor data update.
+
+        :param _self: another reference to ``self`` sent by Klein
+        :param request: the Request
+        :type request: instance of :class:`twisted.web.server.Request`
+        """
+        logger.debug('Received sensor update request from %s with args: %s',
+                     request.client.host, request.args)
+        return "sensor update: %s" % request.args
