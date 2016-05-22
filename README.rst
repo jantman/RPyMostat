@@ -38,14 +38,17 @@ Features planned for the initial release:
 * Flexible rules-based scheduling. This can include cron-like schedules (do X at a given time of day, or time of day on one or more days of week, etc.), one-time schedule overrides ("I'm going to be away from December 21st to 28th this year, just keep the temperature above Y"), or instant adjustments ("make the temperature X degress NOW", in the web UI). The most specific schedule wins. Inital scheduling will support some mix of what can be represented by `ISO8601 time intervals <http://en.wikipedia.org/wiki/ISO_8601#Time_intervals>`_ and `cron expressions <http://en.wikipedia.org/wiki/Cron#CRON_expression>`_.
 * Data on current and desired temperature(s) and heating/cooling state will be collected. This should allow the scheduling engine to build up historical data on how long it takes to heat or cool one degree at a given temperature, and should allow us to trigger heating/cooling to reach the scheduled temperature at the scheduled time (as opposed to starting the heating/cooling at the scheduled time).
 * Support for N temperature sensors, and scheduling based on them; i.e. set a daytime target temperature based on the temperature of your office, and a nighttime target based on the temperature in the bedroom.
-* Web UI with robust mobile support. Ideally, the entire system should be configurable by a web UI once it's installed (which should be done with a Puppet module).
-* I don't plan on supporting physical controls (screen and buttons on the wall) any time soon; in practice, I'm always closer to a laptop, tablet or phone than I am to that one out-of-the-way spot on the wall.
+* Web UI with robust mobile and touch support. Ideally, the entire system should be configurable by a web UI once it's installed (which should be done with a Puppet module).
+* Some sort of physical on-the-wall touchscreen control, using the web UI.
 * Everything AGPL 3.0.
 * Ability to set schedules using a specific algorithm (plug-in architecture) and one or more specified temperature inputs.
 * Scheduling and decision (system run) implemented in plugins (packages, `entry points <http://pythonhosted.org/setuptools/setuptools.html#dynamic-discovery-of-services-and-plugins>`_) that use a defined API; some way of reflecting this in the Web UI (maybe this should come over the master API). Initially just implement scheduling as described above and setting temperature based on one temp input; subsequent plugins could include averaging across multiple inputs, weighted average, and predictive on/off cycles (including outside temperature input).
 * Historical data stored in some time-series database; should include all temperature values at the beginning of a run, and every X minutes during a run.
 * Everything should be modular.
 * Support running all on one RPi, or splitting components apart; should support as many OSes as possible. Support for smaller devices as temperature sensors would be nice.
+* Microservice/component architecture.
+* Open, documented APIs. Aside from the main engine, it should be possible to implement the other components in other languages.
+* mDNS / DNS-SD for zero configuration on devices other than the engine.
 
 Reference Implementation
 ------------------------
