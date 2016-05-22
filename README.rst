@@ -20,7 +20,7 @@ RPyMostat
    :alt: Project Status: Concept - Minimal or no implementation has been done yet.
    :target: http://www.repostatus.org/#concept
 
-A python-based intelligent home thermostat, targeted at (but not requiring) the RaspberryPi and similar small computers. (Originally "RaspberryPyMostat", for 'RaspberryPi Python Thermostat', but that's too long to reasonably name a Python package).
+A python-based modular intelligent home thermostat, targeted at (but not requiring) the RaspberryPi and similar small computers, with a documented API. (Originally "RaspberryPyMostat", for 'RaspberryPi Python Thermostat', but that's too long to reasonably name a Python package).
 
 Note that I attempted something like this `a long time ago <https://github.com/jantman/tuxostat>`_.
 

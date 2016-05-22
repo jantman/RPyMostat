@@ -1,5 +1,5 @@
 .. meta::
-   :description: Description of your package here
+   :description: A python-based modular intelligent home thermostat, targeted at (but not requiring) the RaspberryPi and similar small computers, with a documented API.
 
 RPyMostat
 ================
@@ -67,7 +67,11 @@ Contents
 .. toctree::
    :maxdepth: 4
 
-   API <modules>
+   Planning <Planning>
+   Architecture <Architecture>
+   Discovery <Discovery>
+   Twisted <Twisted>
+   Python API <modules>
    Changelog <changes>
 
 Indices and tables
