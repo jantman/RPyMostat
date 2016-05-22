@@ -12,6 +12,7 @@ import logging
 
 FORMAT = "[%(levelname)s %(filename)s:%(lineno)s - %(funcName)20s() ] %(message)s"
 logging.basicConfig(level=logging.ERROR, format=FORMAT)
+logger = logging.getLogger()
 
 from rpymostat import settings
 from rpymostat.hub.apiserver import HubAPIServer
@@ -21,8 +22,7 @@ def run():
     """
     Start running the processes...
     """
-    logger = logging.getLogger(__name__)
-    logger.setLevel(logging.INFO)
+    logger.setLevel(logging.DEBUG)
     logger.debug("instantiating apiserver")
     apiserver = HubAPIServer()
     apisite = Site(apiserver.app.resource())

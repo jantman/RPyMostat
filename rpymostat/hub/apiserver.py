@@ -3,6 +3,9 @@ RPyMostat API Hub HTTP server
 """
 from klein import Klein
 from twisted.python import log
+import logging
+
+logger = logging.getLogger(__name__)
 
 
 class HubAPIServer(object):
@@ -22,6 +25,7 @@ class HubAPIServer(object):
         """
         return "Hello, World!"
 
-    @app.route('/<param>')
-    def paramed_url(self, request, param):
-        return "Got param '{p}' in argument".format(p=param)
+    @app.route('/<path:path>')
+    def catchall(self, request, path):
+        logger.debug('Catch-all for path: %s', path)
+        return "Got catch-all path '{p}'".format(p=path)

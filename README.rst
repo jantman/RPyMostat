@@ -24,11 +24,23 @@ A python-based modular intelligent home thermostat, targeted at (but not requiri
 
 Note that I attempted something like this `a long time ago <https://github.com/jantman/tuxostat>`_.
 
-See:
+See docs/ for information.
 
-* `docs/README.md <docs/README.md>`_ for some overall WIP notes
-* `docs/Architecture.md <docs/Architecture.md>`_ for an overview of the architecture, and most of the documentation that currently exists.
-* `docs/DISCOVERY.md <docs/DISCOVERY.md>`_ for some information on service discovery
+This repository will hold the main Engine component
+
+Architecture
+------------
+
+RPyMostat is made up of four components, each of which is distributed separately.
+They can all be run on one host/RPi, or can be spread across multiple machines. All
+components communicate over a documented HTTP ReST API, so aside from the Engine,
+other components can be replaced with API-compatible versions written in other
+languages or for specific hardware.
+
+- Engine (this repo) - the "brains" which serve the API and make all decisions.
+- UI - the Web UI, which is simply a web-based API client.
+- Sensor - the temperature sensor daemon.
+- Control - the physical relay control daemon.
 
 Features
 --------
