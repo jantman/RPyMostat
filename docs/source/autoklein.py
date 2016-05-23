@@ -13,6 +13,7 @@
 import re
 import itertools
 import six
+import operator
 
 from docutils import nodes
 from docutils.parsers.rst import directives
@@ -110,7 +111,10 @@ class AutokleinDirective(Directive):
                     for endpoint in self.endpoints])
         else:
             routes = get_routes(app)
-        for method, paths, endpoint in routes:
+        # sort by path then method
+        for method, paths, endpoint in sorted(
+                routes, key=operator.itemgetter(1, 0)
+        ):
             if endpoint in self.undoc_endpoints:
                 continue
             view = app._endpoints[endpoint]
@@ -125,13 +129,9 @@ class AutokleinDirective(Directive):
     
             if not docstring and 'include-empty-docstring' not in self.options:
                 continue
-            print("DOCSTRING BEFORE: %s" % docstring)
             docstring = self.fix_docstring(docstring)
-            print("DOCSTRING AFTER: %s" % docstring)
             docstring = prepare_docstring(docstring)
-            print("DOCSTRING FINAL: %s" % docstring)
             for line in http_directive(method, paths, docstring):
-                print("LINE: %s" % line)
                 yield line
 
     def run(self):
