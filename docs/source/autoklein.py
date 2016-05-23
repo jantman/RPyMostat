@@ -89,6 +89,20 @@ class AutokleinDirective(Directive):
             return frozenset()
         return frozenset(re.split(r'\s*,\s*', undoc_endpoints))
 
+    def fix_docstring(self, docstring):
+        """
+        if <HTTPAPI> is in docstring, only return the docstring from there on
+        """
+        lines = docstring.split("\n")
+        idx = None
+        for i, line in enumerate(lines):
+           if '<HTTPAPI>' in line:
+               idx = i
+        if idx is not None:
+            del lines[:(idx+1)]
+        res = "\n".join(lines)
+        return res
+
     def make_rst(self):
         app = import_object(self.arguments[0])
         if self.endpoints:
@@ -97,7 +111,6 @@ class AutokleinDirective(Directive):
         else:
             routes = get_routes(app)
         for method, paths, endpoint in routes:
-
             if endpoint in self.undoc_endpoints:
                 continue
             view = app._endpoints[endpoint]
@@ -112,8 +125,13 @@ class AutokleinDirective(Directive):
     
             if not docstring and 'include-empty-docstring' not in self.options:
                 continue
+            print("DOCSTRING BEFORE: %s" % docstring)
+            docstring = self.fix_docstring(docstring)
+            print("DOCSTRING AFTER: %s" % docstring)
             docstring = prepare_docstring(docstring)
+            print("DOCSTRING FINAL: %s" % docstring)
             for line in http_directive(method, paths, docstring):
+                print("LINE: %s" % line)
                 yield line
 
     def run(self):

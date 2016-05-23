@@ -318,6 +318,14 @@ def remove_module_docstring(app, what, name, obj, options, lines):
         lines.append('Global class attribute pointing to a Klein instance.')
     if what == "module":
         del lines[:]
+    # strip <HTTPAPI> docs; this strips anything from 'HTTPAPI' on for
+    # regular autodoc; it'll only be shown for httpdomain docs (autoklein)
+    idx = None
+    for i, line in enumerate(lines):
+       if '<HTTPAPI>' in line:
+           idx = i
+    if idx is not None:
+        del lines[idx:]
 
 # ignore non-local image warnings
 def _warn_node(self, msg, node, **kwargs):

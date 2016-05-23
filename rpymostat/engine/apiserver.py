@@ -75,6 +75,10 @@ class APIServer(object):
         :param request: the Request
         :type request: instance of :py:class:`twisted.web.server.Request`
 
+        <HTTPAPI>
+        Simple informational page that shows the program and version, where to
+        find the source code, and links to the documentation and status page.
+
         **Example request**:
 
         .. sourcecode:: http
