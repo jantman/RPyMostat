@@ -64,6 +64,9 @@ def main():
     logger.debug("reactor.listenTCP")
     reactor.listenTCP(settings.API_PORT, apisite)
     logger.debug("reactor.run() - listening on port %d", settings.API_PORT)
+    # setup Python logging
+    observer = log.PythonLoggingObserver()
+    observer.start()
     reactor.run()
     logger.debug("run finished")
 
