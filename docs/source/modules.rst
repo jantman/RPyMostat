@@ -1,7 +1,7 @@
-RPyMostat
-===============
+rpymostat
+=========
 
 .. toctree::
    :maxdepth: 4
 
-   RPyMostat
+   rpymostat

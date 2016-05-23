@@ -49,6 +49,7 @@ class APIServer(object):
     Main class for the Klein-based API server.
     """
 
+    # Note - docs for this are overridden in docs/source/conf.py
     app = Klein()
 
     def __init__(self):

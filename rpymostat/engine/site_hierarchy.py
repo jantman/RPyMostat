@@ -106,7 +106,6 @@ class SiteHierarchy(object):
         mapped directly to ``self.prefix``.
 
         :param func: callable in this class to map to path
-        :type func: method
         :param path: path to map method to
         :type path: str
         :param methods: methods allowed for this route

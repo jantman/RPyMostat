@@ -85,4 +85,3 @@ License
 --------
 
 RPyMostat is licensed under the `GNU Affero General Public License, version 3 or later <http://www.gnu.org/licenses/agpl.html>`_.
-This shouldn't be much of a concern to most people; see :ref:`Development / AGPL <development.agpl>` for more information.

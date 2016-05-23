@@ -1,5 +1,5 @@
-RPyMostat
-=========
+Planning
+========
 
 |Project Status: Concept - Minimal or no implementation has been done
 yet.|
@@ -336,7 +336,7 @@ Twisted supports scheduling/timeouts/repeating events, which seems like
 it could handle quite a bit of this.
 
 Framework Considerations
-========================
+------------------------
 
 There are essentially two options (aside from doing it all from scratch)
 that appear obvious:
@@ -356,7 +356,7 @@ The main concerns/evaluation points that I can think of:
    threading/network)
 
 Datastore
-=========
+---------
 
 NoSQL or document-object sounds good, since for the most part we're
 storing simple objects, but they may have arbitrary properties
@@ -396,14 +396,14 @@ the target usage of Mongo as you can get):
    fine
 
 TSDB
-====
+----
 
 We want to store historical data on temperatures, runs, etc. Initially
 we can just use something simple, but we'll probably want to find a
 good, optimized storage for this.
 
 Packaging
-=========
+---------
 
 `qwcode <https://github.com/qwcode>`__ suggested using one repository
 and setuptools extras. I did some tests to make sure ``pip`` supports
@@ -448,7 +448,7 @@ be replaced with a third party one that just respects our API), maybe
 these things should be relatively separate in order to promote that?
 
 That Temperature Thing
-======================
+----------------------
 
 Yup, I've got a million links and they're all about system architecture
 and frameworks and implementation details, and nothing about what this

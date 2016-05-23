@@ -17,7 +17,7 @@ import os
 import re
 # to let sphinx find the actual source...
 sys.path.insert(0, os.path.abspath("../.."))
-from RPyMostat.version import _VERSION
+from rpymostat.version import VERSION
 import sphinx.environment
 from docutils.utils import get_source_line
 
@@ -29,12 +29,12 @@ from docutils.utils import get_source_line
 is_rtd = os.environ.get('READTHEDOCS', None) != 'True'
 readthedocs_version = os.environ.get('READTHEDOCS_VERSION', '')
 
-rtd_version = _VERSION
+rtd_version = VERSION
 
 if (readthedocs_version in ['stable', 'latest', 'master'] or
     re.match(r'^\d+\.\d+\.\d+', readthedocs_version)):
     # this is a tag or stable/latest/master; show the actual version
-    rtd_version = _VERSION
+    rtd_version = VERSION
 
 # -- General configuration ------------------------------------------------
 
@@ -142,7 +142,7 @@ if is_rtd:
 
 # The name for this set of Sphinx documents.  If None, it defaults to
 # "<project> v<release> documentation".
-html_title = 'v{v} - Description of Package Here'.format(v=version)
+html_title = 'v{v} - A python-based modular intelligent home thermostat, targeted at (but not requiring) the RaspberryPi and similar small computers, with a documented open API.'.format(v=version)
 
 # Add any extra paths that contain custom files (such as robots.txt or
 # .htaccess) here, relative to this directory. These files are copied
@@ -272,7 +272,7 @@ man_pages = [
 #  dir menu entry, description, category)
 texinfo_documents = [
   (master_doc, 'RPyMostat', u'RPyMostat Documentation',
-   author, 'RPyMostat', 'One line description of project.',
+   author, 'RPyMostat', 'A python-based modular intelligent home thermostat, targeted at (but not requiring) the RaspberryPi and similar small computers, with a documented open API.',
    'Miscellaneous'),
 ]
 
@@ -291,7 +291,8 @@ texinfo_documents = [
 
 # Example configuration for intersphinx: refer to the Python standard library.
 intersphinx_mapping = {
-    'https://docs.python.org/': None
+    'https://docs.python.org/': None,
+    'http://twistedmatrix.com/documents/current/api/': None
 }
 
 autoclass_content = 'class'
@@ -302,16 +303,23 @@ linkcheck_ignore = [
     r'https?://www\.virtualenv\.org.*',
     r'https?://.*\.readthedocs\.org.*',
     r'https?://codecov\.io.*',
-    r'https?://.*readthedocs\.org.*'
+    r'https?://.*readthedocs\.org.*',
 ]
 
 # exclude module docstrings - see http://stackoverflow.com/a/18031024/211734
 def remove_module_docstring(app, what, name, obj, options, lines):
+    if what == 'attribute' and \
+                    str(name) == 'rpymostat.engine.apiserver.APIServer.app':
+        # this comes from Klein, which uses Epydoc, which shows as an error
+        del lines[:]
+        lines.append('Global class attribute pointing to a Klein instance.')
+        print('remove_module_docstring', 'GOT IT', lines)
+    print('remove_module_docstring', what, name)
     if what == "module":
         del lines[:]
 
 # ignore non-local image warnings
-def _warn_node(self, msg, node):
+def _warn_node(self, msg, node, **kwargs):
     if not msg.startswith('nonlocal image URI found:'):
         self._warnfunc(msg, '%s:%s' % get_source_line(node))
 

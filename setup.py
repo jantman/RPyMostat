@@ -84,7 +84,7 @@ setup(
     packages=find_packages(),
     url=PROJECT_URL,
     license='AGPLv3+',
-    description='A python-based intelligent home thermostat, targeted at (but not requiring) the RaspberryPi and similar small computers.',
+    description='A python-based modular intelligent home thermostat, targeted at (but not requiring) the RaspberryPi and similar small computers, with a documented open API.',
     long_description=long_description,
     install_requires=requirements,
     extra_requires=extras,
