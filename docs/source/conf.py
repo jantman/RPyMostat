@@ -20,6 +20,8 @@ sys.path.insert(0, os.path.abspath("../.."))
 from rpymostat.version import VERSION
 import sphinx.environment
 from docutils.utils import get_source_line
+sys.path.append(os.path.dirname(__file__))
+from autoklein import setup as autoklein_setup
 
 # If extensions (or modules to document with autodoc) are in another directory,
 # add these directories to sys.path here. If the directory is relative to the
@@ -314,8 +316,6 @@ def remove_module_docstring(app, what, name, obj, options, lines):
         # this comes from Klein, which uses Epydoc, which shows as an error
         del lines[:]
         lines.append('Global class attribute pointing to a Klein instance.')
-        print('remove_module_docstring', 'GOT IT', lines)
-    print('remove_module_docstring', what, name)
     if what == "module":
         del lines[:]
 
@@ -328,3 +328,4 @@ sphinx.environment.BuildEnvironment.warn_node = _warn_node
 
 def setup(app):
     app.connect("autodoc-process-docstring", remove_module_docstring)
+    autoklein_setup(app)

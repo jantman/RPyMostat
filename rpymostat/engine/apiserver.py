@@ -74,31 +74,47 @@ class APIServer(object):
         :param _self: another reference to ``self``, sent by Klein.
         :param request: the Request
         :type request: instance of :py:class:`twisted.web.server.Request`
+
+        **Example request**:
+
+        .. sourcecode:: http
+
+          GET /users/123/posts/web HTTP/1.1
+          Host: example.com
+          Accept: application/json, text/javascript
+
+        **Example response**:
+
+        .. sourcecode:: http
+
+          HTTP/1.1 200 OK
+          Vary: Accept
+          Content-Type: text/javascript
+
+          [
+            {
+              "post_id": 12345,
+              "author_id": 123,
+              "tags": ["server", "web"],
+              "subject": "I tried Nginx"
+            },
+            {
+              "post_id": 12346,
+              "author_id": 123,
+              "tags": ["html5", "standards", "web"],
+              "subject": "We go to HTML 5"
+            }
+          ]
+
+        :query sort: one of ``hit``, ``created-at``
+        :query offset: offset number. default is 0
+        :query limit: limit number. default is 30
+        :reqheader Accept: the response content type depends on
+                          :mailheader:`Accept` header
+        :reqheader Authorization: optional OAuth token to authenticate
+        :resheader Content-Type: this depends on :mailheader:`Accept`
+                                header of request
+        :statuscode 200: no error
+        :statuscode 404: there's no user
         """
         return "Hello, World!"
-
-    @property
-    def url_map(self):
-        """
-        Exists for sphinxcontrib-httpdomain to get the URL map (like a Flask
-        app).
-
-        :return: our Klein app's URL map
-        :rtype: :py:class:`werkzeug.routing.Map`
-        """
-        return self.app.url_map
-
-    @property
-    def static_url_path(self):
-        """
-        Exists only to keep sphinxcontrib-httpdomain happy with Klein.
-
-        :return: "/"
-        :rtype: str
-        """
-        return '/'
-
-    @property
-    def view_functions(self):
-        """Exists only to keep sphinxcontrib-httpdomain happy with Klein."""
-        return self.app._endpoints
