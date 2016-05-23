@@ -76,3 +76,29 @@ class APIServer(object):
         :type request: instance of :py:class:`twisted.web.server.Request`
         """
         return "Hello, World!"
+
+    @property
+    def url_map(self):
+        """
+        Exists for sphinxcontrib-httpdomain to get the URL map (like a Flask
+        app).
+
+        :return: our Klein app's URL map
+        :rtype: :py:class:`werkzeug.routing.Map`
+        """
+        return self.app.url_map
+
+    @property
+    def static_url_path(self):
+        """
+        Exists only to keep sphinxcontrib-httpdomain happy with Klein.
+
+        :return: "/"
+        :rtype: str
+        """
+        return '/'
+
+    @property
+    def view_functions(self):
+        """Exists only to keep sphinxcontrib-httpdomain happy with Klein."""
+        return self.app._endpoints

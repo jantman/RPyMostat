@@ -72,6 +72,7 @@ Contents
    Discovery <Discovery>
    Twisted <Twisted>
    Python API <modules>
+   HTTP API <httpapi>
    Changelog <changes>
 
 Indices and tables
