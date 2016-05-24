@@ -84,10 +84,14 @@ setup(
     packages=find_packages(),
     url=PROJECT_URL,
     license='AGPLv3+',
+    entry_points="""
+    [console_scripts]
+    rpymostat-engine = rpymostat.runner:console_entry_point
+    """,
     description='A python-based modular intelligent home thermostat, targeted at (but not requiring) the RaspberryPi and similar small computers, with a documented open API.',
     long_description=long_description,
     install_requires=requirements,
     extra_requires=extras,
-    keywords="thermostat automation control temperature",
+    keywords="temperature thermometer nest thermostat automation control home",
     classifiers=classifiers
 )
