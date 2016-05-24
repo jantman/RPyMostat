@@ -112,6 +112,7 @@ To install for development:
     $ cd RPyMostat
     $ virtualenv . && source bin/activate
     $ pip install -r requirements_dev.txt
+    $ python setup.py develop
 
 The git clone you're now in will probably be checked out to a specific commit,
 so you may want to ``git checkout BRANCHNAME``.
