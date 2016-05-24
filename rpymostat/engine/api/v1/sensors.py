@@ -135,6 +135,20 @@ class Sensors(SiteHierarchy):
         :statuscode 201: update has been made in the database
         :statuscode 202: update has been queued
         """
-        logger.debug('Received sensor update request from %s with args: %s',
-                     request.client.host, request.args)
+        try:
+            raw = request.content.getvalue()
+        except:
+            request.setResponseCode(400)
+            return "Could not read request content."
+        if len(raw) < 1:
+            request.setResponseCode(400)
+            return "Empty request."
+        try:
+            data = json.loads(raw)
+        except:
+            request.setResponseCode(400)
+            return "Invalid JSON."
+        logger.debug('Received sensor update request from %s with content: %s',
+                     request.client.host, data)
+        request.setResponseCode(202)
         return "sensor update: %s" % request.args
