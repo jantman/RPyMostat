@@ -108,8 +108,8 @@ To install for development:
 
 .. code-block:: bash
 
-    $ git clone git@github.com:YOURNAME/rpymostat.git
-    $ cd rpymostat
+    $ git clone git@github.com:YOURNAME/RPyMostat.git
+    $ cd RPyMostat
     $ virtualenv . && source bin/activate
     $ pip install -r requirements_dev.txt
 
