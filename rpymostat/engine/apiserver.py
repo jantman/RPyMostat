@@ -82,7 +82,7 @@ class APIServer(object):
         version, where to find the source code, and links to the documentation
         and status page.
 
-        Served by :py:meth:`~.handle_root`.
+        Served by :py:meth:`.handle_root`.
 
         **Example request**:
 

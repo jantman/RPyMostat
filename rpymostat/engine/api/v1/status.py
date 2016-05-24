@@ -60,8 +60,34 @@ class Status(SiteHierarchy):
 
         @TODO this should be meaningful JSON.
 
+        This serves :http:get:`/v1/status`
+
         :param _self: another reference to ``self`` sent by Klein
         :param request: the Request
         :type request: instance of :class:`twisted.web.server.Request`
+
+        <HTTPAPI>
+        Return application status information. Currently just returns the
+        text string "Status: Running".
+
+        Served by :py:meth:`.status`.
+
+        **Example request**:
+
+        .. sourcecode:: http
+
+          GET / HTTP/1.1
+          Host: example.com
+
+        **Example Response**:
+
+        .. sourcecode:: http
+
+          HTTP/1.1 200 OK
+          Content-Type: text/plain
+
+          Status: Running
+
+        :statuscode 200: operational
         """
         return "Status: Running"

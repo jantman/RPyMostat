@@ -37,6 +37,7 @@ Jason Antman <jason@jasonantman.com> <http://www.jasonantman.com>
 
 import abc # noqa
 import logging
+import json
 
 from rpymostat.engine.site_hierarchy import SiteHierarchy
 
@@ -58,21 +59,81 @@ class Sensors(SiteHierarchy):
 
     def list(self, _self, request):
         """
-        @TODO Handle list sensors
+        Handle sensor list API endpoint - return a list of known sensors.
+
+        This serves the :http:get:`/v1/sensors` endpoint.
 
         :param _self: another reference to ``self`` sent by Klein
         :param request: the Request
         :type request: instance of :class:`twisted.web.server.Request`
+
+        <HTTPAPI>
+        Return application status information. Currently just returns the
+        text string "Status: Running".
+
+        Served by :py:meth:`.list`.
+
+        **Example request**:
+
+        .. sourcecode:: http
+
+          GET /v1/sensors HTTP/1.1
+          Host: example.com
+
+        **Example Response**:
+
+        .. sourcecode:: http
+
+          HTTP/1.1 200 OK
+          Content-Type: application/json
+
+          {}
+
+        :statuscode 200: no errors
         """
-        return "sensor list"
+        return json.dumps({})
 
     def update(self, _self, request):
         """
+        Handle updating data from a remote sensor.
+
+        This serves :http:post:`/v1/sensors/update` endpoint.
+
         @TODO Handle sensor data update.
 
         :param _self: another reference to ``self`` sent by Klein
         :param request: the Request
         :type request: instance of :class:`twisted.web.server.Request`
+
+        <HTTPAPI>
+        Update current data/readings for sensors from a remote RPyMostat-sensor
+        device.
+
+        Served by :py:meth:`.update`.
+
+        **Example request**:
+
+        .. sourcecode:: http
+
+          POST /v1/sensors/update HTTP/1.1
+          Host: example.com
+
+          {}
+
+        **Example Response**:
+
+        .. sourcecode:: http
+
+          HTTP/1.1 202 OK
+          Content-Type: application/json
+
+          {"status": "accepted", "id": 1234}
+
+        :<json host_id: *(string)* the unique identifier of the sending host
+        :>json status: *(string)* the status of the update; ``accepted`` or ``done``
+        :>json id: *(int)* unique identifier for the update
+        :statuscode 201: update has been made in the database
+        :statuscode 202: update has been queued
         """
         logger.debug('Received sensor update request from %s with args: %s',
                      request.client.host, request.args)
