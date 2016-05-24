@@ -67,6 +67,8 @@ class APIServer(object):
         root resource (/) request handler. This should only be called by
         the Kelin app as a route.
 
+        This serves the :http:get:`/` endpoint.
+
         @TODO this should return some helpful information, like the server
         version and a link to the docs, as well as where to obtain the source
         code and a link to the status page.
@@ -76,49 +78,19 @@ class APIServer(object):
         :type request: instance of :py:class:`twisted.web.server.Request`
 
         <HTTPAPI>
-        Simple informational page that shows the program and version, where to
-        find the source code, and links to the documentation and status page.
+        Simple informational page that returns HTML describing the program and
+        version, where to find the source code, and links to the documentation
+        and status page.
+
+        Served by :py:meth:`~.handle_root`.
 
         **Example request**:
 
         .. sourcecode:: http
 
-          GET /users/123/posts/web HTTP/1.1
+          GET / HTTP/1.1
           Host: example.com
-          Accept: application/json, text/javascript
 
-        **Example response**:
-
-        .. sourcecode:: http
-
-          HTTP/1.1 200 OK
-          Vary: Accept
-          Content-Type: text/javascript
-
-          [
-            {
-              "post_id": 12345,
-              "author_id": 123,
-              "tags": ["server", "web"],
-              "subject": "I tried Nginx"
-            },
-            {
-              "post_id": 12346,
-              "author_id": 123,
-              "tags": ["html5", "standards", "web"],
-              "subject": "We go to HTML 5"
-            }
-          ]
-
-        :query sort: one of ``hit``, ``created-at``
-        :query offset: offset number. default is 0
-        :query limit: limit number. default is 30
-        :reqheader Accept: the response content type depends on
-                          :mailheader:`Accept` header
-        :reqheader Authorization: optional OAuth token to authenticate
-        :resheader Content-Type: this depends on :mailheader:`Accept`
-                                header of request
         :statuscode 200: no error
-        :statuscode 404: there's no user
         """
         return "Hello, World!"
