@@ -86,7 +86,7 @@ setup(
     license='AGPLv3+',
     entry_points="""
     [console_scripts]
-    rpymostat-engine = rpymostat.runner:console_entry_point
+    rpymostat-engine = rpymostat.runner:main
     """,
     description='A python-based modular intelligent home thermostat, targeted at (but not requiring) the RaspberryPi and similar small computers, with a documented open API.',
     long_description=long_description,
