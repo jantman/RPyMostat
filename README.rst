@@ -108,10 +108,10 @@ To install for development:
 
 .. code-block:: bash
 
-    $ virtualenv RPyMostat
-    $ cd RPyMostat && source bin/activate
-    $ pip install -e git+git@github.com:YOURNAME/rpymostat.git@BRANCHNAME#egg=rpymostat
-    $ cd src/rpymostat
+    $ git clone git@github.com:YOURNAME/rpymostat.git
+    $ cd rpymostat
+    $ virtualenv . && source bin/activate
+    $ pip install -r requirements_dev.txt
 
 The git clone you're now in will probably be checked out to a specific commit,
 so you may want to ``git checkout BRANCHNAME``.
