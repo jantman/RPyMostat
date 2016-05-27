@@ -118,7 +118,35 @@ class Sensors(SiteHierarchy):
           POST /v1/sensors/update HTTP/1.1
           Host: example.com
 
-          {}
+          {
+              'host_id': 'myhostid',
+              'sensors': {
+                  '1058F50F01080047': {
+                     'type': 'DS18S20',
+                     'value': 24.3125,
+                     'alias': 'some_alias',
+                     'extra': 'arbitrary string'
+                  },
+                  ...
+              }
+          }
+
+        **Sensor Data Objects**:
+
+        The ``sensors`` request attribute is itself an object (dict/hash). Keys
+        are globally-unique sensor IDs. The value is an object with the
+        following fields/attributes/keys:
+
+        - **type:** *(string)* descriptive type, such as the sensor model
+        - **value:** *(float/decimal or null)* decimal current temperature
+          reading in degrees Celsius, or null if the current reading cannot
+          be determined.
+        - **alias:** *(optional; string)* a human-readable alias or name for
+          this sensor, if the system it runs on contains this information. This
+          is not to be confused with the name that RPyMostat maintains for the
+          sensor.
+        - **extra:** *(optional; string)* arbitrary further information about
+          this sensor, to be included in details about it.
 
         **Example Response**:
 
@@ -130,6 +158,8 @@ class Sensors(SiteHierarchy):
           {"status": "accepted", "id": 1234}
 
         :<json host_id: *(string)* the unique identifier of the sending host
+        :<json sensors: *(object)* array of sensor data objects, conforming to
+          the description above.
         :>json status: *(string)* the status of the update; ``accepted`` or ``done``
         :>json id: *(int)* unique identifier for the update
         :statuscode 201: update has been made in the database
