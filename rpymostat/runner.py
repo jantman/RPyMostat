@@ -58,6 +58,10 @@ def main():
     """
     Run the Engine API server
     """
+    # @TODO need argument for interface name to bind to (and address to
+    # advertise); logic to find IP from ifname should go in -common, as
+    # the control package will use it too. If not specified, default to
+    # alphabetically-first non-loopback interface that has an address.
     logger.debug("instantiating apiserver")
     apiserver = APIServer()
     apisite = Site(apiserver.app.resource())
