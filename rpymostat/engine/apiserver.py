@@ -58,6 +58,7 @@ class APIServer(object):
         (currently just :py:class:`~.APIv1`) and sets up any global/top-level
         routes.
         """
+        raise SystemExit("set server version header - twisted.web.server.version ?")
         # initialize top-level routes first
         self.app.route('/')(self.handle_root)
         APIv1(self.app, []).setup_routes()
