@@ -636,3 +636,32 @@ Other Hardware
    Adafruit Industries, Unique & fun DIY electronics and
    kits <https://www.adafruit.com/products/2823>`__
 
+Latest Notes
+------------
+
+DB
+~~
+
+- Don't use Mongo, as only older versions are available for 32-bit (RPi). Leaning
+  towards a normal RDBMS, DB-API 2.0, using `twisted.enterprise.adbapi <https://twistedmatrix.com/documents/14.0.0/core/howto/rdbms.html>`_.
+- I'd use SQLite for dev, and PostgreSQL or MySQL for prod (user's choice). SQLite
+  would have a warning at startup that it isn't supported for anything other than
+  testing, as it doesn't have good ALTER support.
+- I'd handle DB migrations myself; when the Engine starts it makes an initial DB
+  connection. It attempts to read a ``version`` from the ``db_version`` table. If
+  it exists, we just store a dict of ``db_version`` (int) to a string of SQL to run
+  to upgrade to that version. If the table doesn't exist, we start with migrations
+  from version 1 on to latest. Or maybe we just include the full latest schema, in
+  addition to migrations. But I'll write and maintain the migration code myself.
+  I think. I can't seem to find any Python thing that lets me use migrations without
+  an ORM, and I really don't want an ORM.
+- `FrequentlyAskedQuestions – Twisted <https://twistedmatrix.com/trac/wiki/FrequentlyAskedQuestions#HowcanIaccessself.factoryfrommyProtocols__init__>`_
+- `[Twisted-Python] Sharing a database connection in web server <https://twistedmatrix.com/pipermail/twisted-python/2013-December/027863.html>`_
+- `Example – Using Non-Global State — Klein 15.3.1 documentation <http://klein.readthedocs.io/en/latest/examples/nonglobalstate.html>`_
+- `alex/alchimia <https://github.com/alex/alchimia>`_ allows use of `SQLAlchemy <http://www.sqlalchemy.org/>`_ core (not ORM) from Twisted
+   (`SQLAlchemy features <http://www.sqlalchemy.org/features.html>`_). `alembic <https://pypi.python.org/pypi/alembic>`_ is a SQLAlchemy
+   migration tool, so is `sqlalchemy-migrate <https://sqlalchemy-migrate.readthedocs.io/en/latest/>`_.
+- `random project from GitHub <https://github.com/TechEmpower/FrameworkBenchmarks/blob/dd906d0d9ee51c633c40704606de377f11c821a4/frameworks/Python/klein/app.py>`_ that
+   uses SQLAlchemy ORM with Klein.
+- `Going asynchronous: from Flask to Twisted Klein <http://tavendo.com/blog/post/going-asynchronous-from-flask-to-twisted-klein/>`_
+- `sphinxcontrib.httpdomain — Documenting RESTful HTTP APIs — sphinxcontrib-httpdomain 1.4.0 documentation <https://pythonhosted.org/sphinxcontrib-httpdomain/#resource-fields>`_
