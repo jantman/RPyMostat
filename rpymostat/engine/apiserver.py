@@ -36,10 +36,12 @@ Jason Antman <jason@jasonantman.com> <http://www.jasonantman.com>
 """
 
 from klein import Klein
+from twisted.web import server
 import logging
 import abc
 
 from rpymostat.engine.api.v1 import APIv1
+from rpymostat.version import VERSION
 
 logger = logging.getLogger(__name__)
 
@@ -58,7 +60,7 @@ class APIServer(object):
         (currently just :py:class:`~.APIv1`) and sets up any global/top-level
         routes.
         """
-        raise SystemExit("set server version header - twisted.web.server.version ?")
+        server.version = 'RPyMostat %s' % VERSION
         # initialize top-level routes first
         self.app.route('/')(self.handle_root)
         APIv1(self.app, []).setup_routes()
