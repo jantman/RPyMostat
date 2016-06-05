@@ -37,6 +37,10 @@ Jason Antman <jason@jasonantman.com> <http://www.jasonantman.com>
 ##################################################################################
 """
 
+import sys
+import argparse
+import logging
+
 from twisted.web.server import Site
 from twisted.internet import reactor
 # @TODO: see http://twistedmatrix.com/documents/current/core/howto/logging.html
@@ -46,8 +50,7 @@ from twisted.python.log import PythonLoggingObserver
 
 from rpymostat.engine.apiserver import APIServer
 from rpymostat.config import Config
-
-import logging
+from rpymostat.version import VERSION, PROJECT_URL
 
 FORMAT = "[%(levelname)s %(filename)s:%(lineno)s - %(funcName)20s() ] " \
          "%(message)s"
@@ -55,16 +58,65 @@ logging.basicConfig(level=logging.DEBUG, format=FORMAT)
 logger = logging.getLogger()
 
 
-def main():
+def parse_args(argv):
+    """
+    Use Argparse to parse command-line arguments.
+
+    :param argv: list of arguments to parse (``sys.argv[1:]``)
+    :type argv: list
+    :return: parsed arguments
+    :rtype: :py:class:`argparse.Namespace`
+    """
+    p = argparse.ArgumentParser(
+        description='RPyMostat Engine <%s>' % PROJECT_URL
+    )
+    p.add_argument('-c', '--show-config', dest='show_config',
+                   action='store_true', default=False,
+                   help='print configuration variable information')
+    p.add_argument('-v', '--verbose', dest='verbose', action='count',
+                   default=0,
+                   help='verbose output. specify twice for debug-level '
+                   'output.')
+    p.add_argument('-V', '--version', action='version',
+                   version='RPyMostat Engine v%s (<%s>)' % (
+                       VERSION, PROJECT_URL
+                   ))
+    return p.parse_args(argv)
+
+
+def show_config(conf):
+    """
+    Show configuration variable information.
+
+    :param conf: config
+    :type conf: :py:class:`~.Config`
+    """
+    sys.stderr.write("Configuration Environment Variables:\n")
+    for varname, info in sorted(conf.get_var_info().items()):
+        s = '%s (Default=%s' % (info['env_var_name'], info['default_value'])
+        curr = conf.get(varname)
+        if curr != info['default_value']:
+            s += '; Current=%s' % curr
+        if info['is_int']:
+            s += '; int'
+        s += ") %s\n" % info['description']
+        sys.stderr.write(s)
+
+
+def main(argv):
     """
     Run the Engine API server
     """
-    # @TODO need argument for interface name to bind to (and address to
+    # @TODO need setting for interface name to bind to (and address to
     # advertise); logic to find IP from ifname should go in -common, as
     # the control package will use it too. If not specified, default to
     # alphabetically-first non-loopback interface that has an address.
-    logger.debug("instantiating apiserver")
     conf = Config()
+    args = parse_args(argv)
+    if args.show_config:
+        show_config(conf)
+        raise SystemExit(1)
+    logger.debug("instantiating apiserver")
     apiserver = APIServer()
     apisite = Site(apiserver.app.resource())
     logger.debug("reactor.listenTCP")
@@ -78,4 +130,5 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    args = parse_args(sys.argv[1:])
+    main(args)
