@@ -38,7 +38,7 @@ Jason Antman <jason@jasonantman.com> <http://www.jasonantman.com>
 from klein import Klein
 from twisted.web import server
 import logging
-import abc
+import abc  # noqa
 
 from rpymostat.engine.api.v1 import APIv1
 from rpymostat.version import VERSION

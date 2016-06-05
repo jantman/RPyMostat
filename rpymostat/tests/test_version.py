@@ -38,7 +38,6 @@ Jason Antman <jason@jasonantman.com> <http://www.jasonantman.com>
 import rpymostat.version as version
 
 import re
-import sys
 
 
 class TestVersion(object):
@@ -72,4 +71,3 @@ class TestVersion(object):
             r'$'
         )
         assert semver_ptn.match(version.VERSION) is not None
-

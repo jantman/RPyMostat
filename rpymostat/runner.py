@@ -37,21 +37,22 @@ Jason Antman <jason@jasonantman.com> <http://www.jasonantman.com>
 ##################################################################################
 """
 
-import sys
 from twisted.web.server import Site
 from twisted.internet import reactor
 # @TODO: see http://twistedmatrix.com/documents/current/core/howto/logging.html
-#  and http://stackoverflow.com/questions/2493644/how-to-make-twisted-use-python-logging
-from twisted.python import log
+# and http://stackoverflow.com/questions/2493644/how-to-make-
+# twisted-use-python-logging
+from twisted.python.log import PythonLoggingObserver
+
+from rpymostat.engine.apiserver import APIServer
+from rpymostat.config import Config
 
 import logging
 
-FORMAT = "[%(levelname)s %(filename)s:%(lineno)s - %(funcName)20s() ] %(message)s"
+FORMAT = "[%(levelname)s %(filename)s:%(lineno)s - %(funcName)20s() ] " \
+         "%(message)s"
 logging.basicConfig(level=logging.DEBUG, format=FORMAT)
 logger = logging.getLogger()
-
-from rpymostat import settings
-from rpymostat.engine.apiserver import APIServer
 
 
 def main():
@@ -63,13 +64,14 @@ def main():
     # the control package will use it too. If not specified, default to
     # alphabetically-first non-loopback interface that has an address.
     logger.debug("instantiating apiserver")
+    conf = Config()
     apiserver = APIServer()
     apisite = Site(apiserver.app.resource())
     logger.debug("reactor.listenTCP")
-    reactor.listenTCP(settings.API_PORT, apisite)
-    logger.debug("reactor.run() - listening on port %d", settings.API_PORT)
+    reactor.listenTCP(conf.get('api_port'), apisite)
+    logger.debug("reactor.run() - listening on port %d", conf.get('api_port'))
     # setup Python logging
-    observer = log.PythonLoggingObserver()
+    observer = PythonLoggingObserver()
     observer.start()
     reactor.run()
     logger.debug("run finished")

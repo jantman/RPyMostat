@@ -35,7 +35,7 @@ Jason Antman <jason@jasonantman.com> <http://www.jasonantman.com>
 ##################################################################################
 """
 
-import abc # noqa
+import abc  # noqa
 import logging
 
 from rpymostat.engine.site_hierarchy import SiteHierarchy

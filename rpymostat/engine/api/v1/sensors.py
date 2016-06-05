@@ -35,7 +35,7 @@ Jason Antman <jason@jasonantman.com> <http://www.jasonantman.com>
 ##################################################################################
 """
 
-import abc # noqa
+import abc  # noqa
 import logging
 import json
 
@@ -160,7 +160,8 @@ class Sensors(SiteHierarchy):
         :<json host_id: *(string)* the unique identifier of the sending host
         :<json sensors: *(object)* array of sensor data objects, conforming to
           the description above.
-        :>json status: *(string)* the status of the update; ``accepted`` or ``done``
+        :>json status: *(string)* the status of the update;
+          ``accepted`` or ``done``
         :>json id: *(int)* unique identifier for the update
         :statuscode 201: update has been made in the database
         :statuscode 202: update has been queued
