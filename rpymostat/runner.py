@@ -103,15 +103,13 @@ def show_config(conf):
         sys.stderr.write(s)
 
 
-def main(argv):
+def main(argv=None):
     """
     Run the Engine API server
     """
-    # @TODO need setting for interface name to bind to (and address to
-    # advertise); logic to find IP from ifname should go in -common, as
-    # the control package will use it too. If not specified, default to
-    # alphabetically-first non-loopback interface that has an address.
     conf = Config()
+    if argv is None:
+        argv = sys.argv[1:]
     args = parse_args(argv)
     if args.show_config:
         show_config(conf)
