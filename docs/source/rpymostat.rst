@@ -18,7 +18,7 @@ Submodules
 
 .. toctree::
 
+   rpymostat.config
    rpymostat.runner
-   rpymostat.settings
    rpymostat.version
 
