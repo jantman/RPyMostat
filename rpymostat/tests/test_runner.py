@@ -55,10 +55,7 @@ else:
 pbm = 'rpymostat.runner'
 
 
-class TestRunnerMocked(object):
-    """
-    Tests the runner functions with mocked objects; no actual Twisted testing
-    """
+class TestRunner(object):
 
     def test_main(self):
         """

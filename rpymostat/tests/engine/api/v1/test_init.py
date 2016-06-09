@@ -34,3 +34,53 @@ AUTHORS:
 Jason Antman <jason@jasonantman.com> <http://www.jasonantman.com>
 ##################################################################################
 """
+
+import sys
+from klein import Klein
+from rpymostat.engine.api.v1 import APIv1
+
+# https://code.google.com/p/mock/issues/detail?id=249
+# py>=3.4 should use unittest.mock not the mock package on pypi
+if (
+        sys.version_info[0] < 3 or
+        sys.version_info[0] == 3 and sys.version_info[1] < 4
+):
+    from mock import patch, call, Mock, DEFAULT  # noqa
+else:
+    from unittest.mock import patch, call, Mock, DEFAULT  # noqa
+
+pbm = 'rpymostat.engine.api.v1'
+pb = '%s.APIv1' % pbm
+
+
+class TestClass(APIv1):
+
+    def __init__(self, app, prefix):
+        pass
+
+
+class TestAPIv1(object):
+
+    def setup(self):
+        self.app = Mock(spec=Klein)
+        self.prefix = ['my', 'parent']
+        self.cls = TestClass(self.app, self.prefix)
+        self.cls.app = self.app
+        self.cls.prefix = self.prefix
+
+    def test_class(self):
+        with patch.multiple(
+            pbm,
+            autospec=True,
+            Sensors=DEFAULT,
+            Status=DEFAULT
+        ) as mocks:
+            self.cls.setup_routes()
+        assert mocks['Sensors'].mock_calls == [
+            call(self.app, self.prefix),
+            call().setup_routes()
+        ]
+        assert mocks['Status'].mock_calls == [
+            call(self.app, self.prefix),
+            call().setup_routes()
+        ]

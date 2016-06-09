@@ -1,4 +1,6 @@
 """
+Tests for runner.py
+
 The latest version of this package is available at:
 <http://github.com/jantman/RPyMostat>
 
@@ -34,3 +36,43 @@ AUTHORS:
 Jason Antman <jason@jasonantman.com> <http://www.jasonantman.com>
 ##################################################################################
 """
+import sys
+
+from rpymostat.engine.api.v1.status import Status
+
+# https://code.google.com/p/mock/issues/detail?id=249
+# py>=3.4 should use unittest.mock not the mock package on pypi
+if (
+        sys.version_info[0] < 3 or
+        sys.version_info[0] == 3 and sys.version_info[1] < 4
+):
+    from mock import patch, call, Mock, DEFAULT  # noqa
+else:
+    from unittest.mock import patch, call, Mock, DEFAULT  # noqa
+
+pbm = 'rpymostat.engine.api.v1.status'
+pb = '%s.Status' % pbm
+
+
+class TestClass(Status):
+
+    def __init__(self, app, prefix):
+        pass
+
+
+class TestStatus(object):
+
+    def test_prefix_part(self):
+        assert TestClass(Mock(), []).prefix_part == 'status'
+
+    def test_setup_routes(self):
+        cls = TestClass(Mock(), [])
+        with patch('%s.add_route' % pb, autospec=True) as mock_add_route:
+            cls.setup_routes()
+        assert mock_add_route.mock_calls == [
+            call(cls, cls.status)
+        ]
+
+    def test_status(self):
+        cls = TestClass(Mock(), [])
+        assert cls.status(cls, Mock()) == 'Status: Running'
