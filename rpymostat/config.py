@@ -60,6 +60,13 @@ class Config(object):
             'description': 'port number to run API server on',
             'is_int': True,
             'default_value': 8088
+        },
+        'verbose': {
+            'env_var_name': 'VERBOSE',
+            'description': 'log verbosity; set to 0 for warning, 1 for info '
+                           'or 2 for debug',
+            'is_int': True,
+            'default_value': 0
         }
     }
 

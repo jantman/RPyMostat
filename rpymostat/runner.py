@@ -76,7 +76,8 @@ def parse_args(argv):
     p.add_argument('-v', '--verbose', dest='verbose', action='count',
                    default=0,
                    help='verbose output. specify twice for debug-level '
-                   'output.')
+                   'output. Can also be controlled by exporting '
+                   'VERBOSE=1 for -v or VERBOSE=2 for -vv')
     p.add_argument('-V', '--version', action='version',
                    version='RPyMostat Engine v%s (<%s>)' % (
                        VERSION, PROJECT_URL
@@ -103,28 +104,71 @@ def show_config(conf):
         sys.stderr.write(s)
 
 
+def set_log_info():
+    """set logger level to INFO"""
+    set_log_level_format(logging.INFO,
+                         '%(asctime)s %(levelname)s:%(name)s:%(message)s')
+
+
+def set_log_debug():
+    """set logger level to DEBUG, and debug-level output format"""
+    set_log_level_format(
+        logging.DEBUG,
+        "%(asctime)s [%(levelname)s %(filename)s:%(lineno)s - "
+        "%(name)s.%(funcName)s() ] %(message)s"
+    )
+
+
+def set_log_level_format(level, format):
+    """
+    Set logger level and format.
+
+    :param level: logging level; see the :py:mod:`logging` constants.
+    :type level: int
+    :param format: logging formatter format string
+    :type format: str
+    """
+    formatter = logging.Formatter(fmt=format)
+    logger.handlers[0].setFormatter(formatter)
+    logger.setLevel(level)
+
+
 def main(argv=None):
     """
     Run the Engine API server
     """
     conf = Config()
+
+    # parse args
     if argv is None:
         argv = sys.argv[1:]
     args = parse_args(argv)
+
+    # handle show_config
     if args.show_config:
         show_config(conf)
         raise SystemExit(1)
+
+    # logging level
+    if args.verbose > 1 or conf.get('verbose') > 1:
+        set_log_debug()
+    elif args.verbose == 1 or conf.get('verbose') == 1:
+        set_log_info()
+
     logger.debug("instantiating apiserver")
     apiserver = APIServer()
     apisite = Site(apiserver.app.resource())
     logger.debug("reactor.listenTCP")
     reactor.listenTCP(conf.get('api_port'), apisite)
     logger.debug("reactor.run() - listening on port %d", conf.get('api_port'))
+
     # setup Python logging
     observer = PythonLoggingObserver()
     observer.start()
+
+    # run the reactor
     reactor.run()
-    logger.debug("run finished")
+    logger.debug("reactor.run() returned")
 
 
 if __name__ == "__main__":

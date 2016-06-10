@@ -37,8 +37,11 @@ Jason Antman <jason@jasonantman.com> <http://www.jasonantman.com>
 ##################################################################################
 """
 import sys
+import logging
+import pytest
 
-from rpymostat.runner import main, parse_args, show_config
+from rpymostat.runner import (main, parse_args, show_config, set_log_info,
+                              set_log_debug, set_log_level_format)
 from rpymostat.version import PROJECT_URL, VERSION
 from rpymostat.config import Config
 
@@ -65,6 +68,8 @@ class TestRunner(object):
         def se_config_get(name):
             if name == 'api_port':
                 return 8088
+            if name == 'verbose':
+                return 0
             return None
 
         mock_args = Mock(verbose=0, show_config=False)
@@ -79,11 +84,14 @@ class TestRunner(object):
                 parse_args=DEFAULT,
                 show_config=DEFAULT,
                 Config=DEFAULT,
+                set_log_info=DEFAULT,
+                set_log_debug=DEFAULT,
             ) as mocks:
                 mocks['Config'].return_value.get.side_effect = se_config_get
                 mocks['parse_args'].return_value = mock_args
                 main([])
         assert mocks['show_config'].mock_calls == []
+        assert mocks['parse_args'].mock_calls == [call([])]
         assert mocks['APIServer'].mock_calls == [
             call(),
             call().app.resource()
@@ -105,8 +113,241 @@ class TestRunner(object):
             call.debug('instantiating apiserver'),
             call.debug("reactor.listenTCP"),
             call.debug("reactor.run() - listening on port %d", 8088),
-            call.debug("run finished")
+            call.debug("reactor.run() returned")
         ]
+        assert mocks['set_log_info'].mock_calls == []
+        assert mocks['set_log_debug'].mock_calls == []
+
+    def test_main_show_config(self):
+        """
+        test main function
+        """
+
+        def se_config_get(name):
+            if name == 'api_port':
+                return 8088
+            if name == 'verbose':
+                return 0
+            return None
+
+        mock_args = Mock(verbose=0, show_config=True)
+        with patch('%s.logger' % pbm, autospec=True) as mocklogger:
+            with patch.multiple(
+                pbm,
+                autospec=True,
+                APIServer=DEFAULT,
+                Site=DEFAULT,
+                reactor=DEFAULT,
+                PythonLoggingObserver=DEFAULT,
+                parse_args=DEFAULT,
+                show_config=DEFAULT,
+                Config=DEFAULT,
+                set_log_info=DEFAULT,
+                set_log_debug=DEFAULT,
+            ) as mocks:
+                mocks['Config'].return_value.get.side_effect = se_config_get
+                mocks['parse_args'].return_value = mock_args
+                with pytest.raises(SystemExit) as excinfo:
+                    main([])
+        assert excinfo.value.code == 1
+        assert mocks['show_config'].mock_calls == [
+            call(mocks['Config'].return_value)
+        ]
+        assert mocks['parse_args'].mock_calls == [call([])]
+        assert mocks['APIServer'].mock_calls == []
+        assert mocks['Site'].mock_calls == []
+        assert mocks['reactor'].mock_calls == []
+        assert mocks['PythonLoggingObserver'].mock_calls == []
+        assert mocklogger.mock_calls == []
+        assert mocks['set_log_info'].mock_calls == []
+        assert mocks['set_log_debug'].mock_calls == []
+
+    def test_main_log_info_cli_sys_argv(self):
+        """
+        test main function
+        """
+
+        def se_config_get(name):
+            if name == 'api_port':
+                return 8088
+            if name == 'verbose':
+                return 0
+            return None
+
+        mock_args = Mock(verbose=1, show_config=False)
+        with patch('%s.logger' % pbm, autospec=True):
+            with patch.multiple(
+                pbm,
+                autospec=True,
+                APIServer=DEFAULT,
+                Site=DEFAULT,
+                reactor=DEFAULT,
+                PythonLoggingObserver=DEFAULT,
+                parse_args=DEFAULT,
+                show_config=DEFAULT,
+                Config=DEFAULT,
+                set_log_info=DEFAULT,
+                set_log_debug=DEFAULT,
+            ) as mocks:
+                mocks['Config'].return_value.get.side_effect = se_config_get
+                mocks['parse_args'].return_value = mock_args
+                with patch.object(sys, 'argv', ['bad', 'foo', 'bar']):
+                    main()
+        assert mocks['parse_args'].mock_calls == [call(['foo', 'bar'])]
+        assert mocks['PythonLoggingObserver'].mock_calls == [
+            call(),
+            call().start()
+        ]
+        assert mocks['set_log_info'].mock_calls == [call()]
+        assert mocks['set_log_debug'].mock_calls == []
+
+    def test_main_log_debug_cli(self):
+        """
+        test main function
+        """
+
+        def se_config_get(name):
+            if name == 'api_port':
+                return 8088
+            if name == 'verbose':
+                return 0
+            return None
+
+        mock_args = Mock(verbose=2, show_config=False)
+        with patch('%s.logger' % pbm, autospec=True):
+            with patch.multiple(
+                pbm,
+                autospec=True,
+                APIServer=DEFAULT,
+                Site=DEFAULT,
+                reactor=DEFAULT,
+                PythonLoggingObserver=DEFAULT,
+                parse_args=DEFAULT,
+                show_config=DEFAULT,
+                Config=DEFAULT,
+                set_log_info=DEFAULT,
+                set_log_debug=DEFAULT,
+            ) as mocks:
+                mocks['Config'].return_value.get.side_effect = se_config_get
+                mocks['parse_args'].return_value = mock_args
+                main([])
+        assert mocks['PythonLoggingObserver'].mock_calls == [
+            call(),
+            call().start()
+        ]
+        assert mocks['set_log_info'].mock_calls == []
+        assert mocks['set_log_debug'].mock_calls == [call()]
+
+    def test_main_log_info_config(self):
+        """
+        test main function
+        """
+
+        def se_config_get(name):
+            if name == 'api_port':
+                return 8088
+            if name == 'verbose':
+                return 1
+            return None
+
+        mock_args = Mock(verbose=0, show_config=False)
+        with patch('%s.logger' % pbm, autospec=True):
+            with patch.multiple(
+                pbm,
+                autospec=True,
+                APIServer=DEFAULT,
+                Site=DEFAULT,
+                reactor=DEFAULT,
+                PythonLoggingObserver=DEFAULT,
+                parse_args=DEFAULT,
+                show_config=DEFAULT,
+                Config=DEFAULT,
+                set_log_info=DEFAULT,
+                set_log_debug=DEFAULT,
+            ) as mocks:
+                mocks['Config'].return_value.get.side_effect = se_config_get
+                mocks['parse_args'].return_value = mock_args
+                main([])
+        assert mocks['PythonLoggingObserver'].mock_calls == [
+            call(),
+            call().start()
+        ]
+        assert mocks['set_log_info'].mock_calls == [call()]
+        assert mocks['set_log_debug'].mock_calls == []
+
+    def test_main_log_debug_config(self):
+        """
+        test main function
+        """
+
+        def se_config_get(name):
+            if name == 'api_port':
+                return 8088
+            if name == 'verbose':
+                return 2
+            return None
+
+        mock_args = Mock(verbose=0, show_config=False)
+        with patch('%s.logger' % pbm, autospec=True):
+            with patch.multiple(
+                pbm,
+                autospec=True,
+                APIServer=DEFAULT,
+                Site=DEFAULT,
+                reactor=DEFAULT,
+                PythonLoggingObserver=DEFAULT,
+                parse_args=DEFAULT,
+                show_config=DEFAULT,
+                Config=DEFAULT,
+                set_log_info=DEFAULT,
+                set_log_debug=DEFAULT,
+            ) as mocks:
+                mocks['Config'].return_value.get.side_effect = se_config_get
+                mocks['parse_args'].return_value = mock_args
+                main([])
+        assert mocks['PythonLoggingObserver'].mock_calls == [
+            call(),
+            call().start()
+        ]
+        assert mocks['set_log_info'].mock_calls == []
+        assert mocks['set_log_debug'].mock_calls == [call()]
+
+    def test_main_log_cli_info_config_debug(self):
+        """
+        test main function
+        """
+
+        def se_config_get(name):
+            if name == 'api_port':
+                return 8088
+            if name == 'verbose':
+                return 2
+            return None
+
+        mock_args = Mock(verbose=1, show_config=False)
+        with patch('%s.logger' % pbm, autospec=True):
+            with patch.multiple(
+                pbm,
+                autospec=True,
+                APIServer=DEFAULT,
+                Site=DEFAULT,
+                reactor=DEFAULT,
+                PythonLoggingObserver=DEFAULT,
+                parse_args=DEFAULT,
+                show_config=DEFAULT,
+                Config=DEFAULT,
+                set_log_info=DEFAULT,
+                set_log_debug=DEFAULT,
+            ) as mocks:
+                mocks['Config'].return_value.get.side_effect = se_config_get
+                mocks['parse_args'].return_value = mock_args
+                main([])
+        assert mocks['PythonLoggingObserver'].mock_calls == [
+            call(),
+            call().start()
+        ]
+        assert mocks['set_log_info'].mock_calls == []
+        assert mocks['set_log_debug'].mock_calls == [call()]
 
     def test_parse_args(self):
         with patch('%s.argparse.ArgumentParser' % pbm, autospec=True) as mock_p:
@@ -120,7 +361,9 @@ class TestRunner(object):
             call().add_argument('-v', '--verbose', dest='verbose',
                                 action='count', default=0,
                                 help='verbose output. specify twice for '
-                                     'debug-level output.'),
+                                     'debug-level output. Can also be '
+                                     'controlled by exporting VERBOSE=1 '
+                                     'for -v or VERBOSE=2 for -vv'),
             call().add_argument('-V', '--version', action='version',
                                 version='RPyMostat Engine v%s (<%s>)' % (
                                     VERSION, PROJECT_URL)),
@@ -189,3 +432,35 @@ class TestRunner(object):
         out, err = capsys.readouterr()
         assert out == ''
         assert err == exp_err
+
+    def test_set_log_info(self):
+        with patch('%s.set_log_level_format' % pbm) as mock_set:
+            set_log_info()
+        assert mock_set.mock_calls == [
+            call(logging.INFO, '%(asctime)s %(levelname)s:%(name)s:%(message)s')
+        ]
+
+    def test_set_log_debug(self):
+        with patch('%s.set_log_level_format' % pbm) as mock_set:
+            set_log_debug()
+        assert mock_set.mock_calls == [
+            call(logging.DEBUG,
+                 "%(asctime)s [%(levelname)s %(filename)s:%(lineno)s - "
+                 "%(name)s.%(funcName)s() ] %(message)s")
+        ]
+
+    def test_set_log_level_format(self):
+        mock_handler = Mock(spec_set=logging.Handler)
+        with patch('%s.logger' % pbm) as mock_logger:
+            with patch('%s.logging.Formatter' % pbm) as mock_formatter:
+                type(mock_logger).handlers = [mock_handler]
+                set_log_level_format(5, 'foo')
+        assert mock_formatter.mock_calls == [
+            call(fmt='foo')
+        ]
+        assert mock_handler.mock_calls == [
+            call.setFormatter(mock_formatter.return_value)
+        ]
+        assert mock_logger.mock_calls == [
+            call.setLevel(5)
+        ]
