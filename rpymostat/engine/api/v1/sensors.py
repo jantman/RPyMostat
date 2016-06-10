@@ -169,17 +169,24 @@ class Sensors(SiteHierarchy):
         try:
             raw = request.content.getvalue()
         except:
+            logger.warning('Got sensor update request with no data from %s',
+                           request.client.host, exc_info=1)
             request.setResponseCode(400)
             return "Could not read request content."
-        if len(raw) < 1:
+        if len(raw.strip()) < 1:
             request.setResponseCode(400)
+            logger.warning('Got empty sensor update request from: %s',
+                           request.client.host)
             return "Empty request."
         try:
             data = json.loads(raw)
         except:
+            logger.warning('Failed deserializing JSON sensor update request '
+                           'from %s: %s', request.client.host, raw, exc_info=1)
             request.setResponseCode(400)
             return "Invalid JSON."
         logger.debug('Received sensor update request from %s with content: %s',
                      request.client.host, data)
-        request.setResponseCode(202)
-        return "sensor update: %s" % request.args
+        # @TODO do something with the data here
+        request.setResponseCode(200)  # change to 202 if queueing
+        return "sensor updated."

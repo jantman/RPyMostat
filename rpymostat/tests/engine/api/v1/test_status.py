@@ -1,6 +1,4 @@
 """
-Tests for runner.py
-
 The latest version of this package is available at:
 <http://github.com/jantman/RPyMostat>
 
