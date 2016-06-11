@@ -207,6 +207,14 @@ UI
 Testing
 +++++++
 
+- Unit tests should mock out the txmongo connection. Integration tests require
+  Mongo, and should run a Docker container of it. Need to look into how to do
+  this nicely on Travis.
+  - Either look into how something like `https://github.com/pytest-dev/pytest-services <https://github.com/pytest-dev/pytest-services>`_
+    does it, or just maintain a persistent connection to Mongo for the life
+    of the test session, and clear the DB before each test (`pytest session fixtures <http://stackoverflow.com/a/14299202>`_)
+  - We'll need some real data fixtures, and to look into the right way to dump
+    and load data from/to Mongo.
 -  Assuming we're going with the API-based model, unit tests should be
    simple. Integration and acceptance tests are another question.
 -  **TODO:** How to test the API server and client?
@@ -264,6 +272,9 @@ Datastore
 +++++++++
 
 MongoDB 2.4. Raspbian has it for ARM.
+
+- `txmongo <https://github.com/twisted/txmongo>`_ and its `docs <https://txmongo.readthedocs.io/en/latest/>`_
+- txmongo `twisted.web example <https://github.com/twisted/txmongo/blob/master/examples/webapps/twistedweb_server.tac>`_
 
 Migrations
 ~~~~~~~~~~
