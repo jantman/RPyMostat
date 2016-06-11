@@ -60,6 +60,7 @@ Develop:
    :target: https://readthedocs.org/projects/RPyMostat/?badge=develop
    :alt: sphinx documentation for develop branch
 
+RPyMostat - A python-based modular intelligent home thermostat, targeted at (but not requiring) the RaspberryPi and similar small computers, with a documented API.
 
 Contents
 =========
@@ -68,6 +69,7 @@ Contents
    :maxdepth: 4
 
    Planning <Planning>
+   Reference Implementation <ReferenceImplementation>
    Architecture <Architecture>
    Discovery <Discovery>
    Twisted <Twisted>
