@@ -1,18 +1,6 @@
 RaspberryPyMostat Architecture
 ==============================
 
-High-Level Diagram
-------------------
-
-See `architecture.svg <architecture.svg>`__ for the actual file, or
-`architecture.dia <architecture.dia>`__ for the
-`Dia <https://wiki.gnome.org/Apps/Dia/>`__ source.
-
-.. figure:: https://cdn.rawgit.com/jantman/RPyMostat/PoC/architecture.svg
-   :alt: High-level SVG diagram of architecture
-
-   High-level SVG diagram of architecture
-
 Overview
 --------
 

@@ -70,12 +70,14 @@ Contents
 
    Planning <Planning>
    Reference Implementation <ReferenceImplementation>
+   Installation, Configuration and Usage <Installation>
    Architecture <Architecture>
    Discovery <Discovery>
    Twisted <Twisted>
    Python API <modules>
    HTTP API <httpapi>
    Changelog <changes>
+   Development <development>
 
 Indices and tables
 ==================

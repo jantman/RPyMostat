@@ -263,9 +263,7 @@ Here's where the complexity lies.
 Datastore
 +++++++++
 
-When I'd initially planned this project (circa 2014) I'd planned on using a NoSQL document store, and was leaning towards MongoDB - mainly because I don't know where the project will go, and I want to support plugins, so a schemaless DB is an advantage (and migrations are a pain). However, as of mid-2016, MongoDB has dropped support for 32-bit architectures and modern versions simply don't run on the RaspberryPi anymore. Saying that users need a separate machine to run the DB goes against the philosophy of this project (though it's how I'll be running my installation), and also introduces reliability and power stability issues. I *really* wanted Mongo, but it doesn't look like that is happening.
-
-Unless I can find another NoSQL document store that runs well on the Pi, I'm going to go with a standard RDBMS; most likely SQLite for test/evaluation and PostgreSQL (or MySQL) for production use. I don't want the overhead of an ORM for something that should be this simple, so I'll use raw SQL, but that means (as far as I can tell) handling migrations myself
+MongoDB 2.4. Raspbian has it for ARM.
 
 Migrations
 ~~~~~~~~~~
