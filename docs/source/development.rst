@@ -42,7 +42,14 @@ Testing is done via `pytest <http://pytest.org/latest/>`_, driven by `tox <http:
 Integration Tests
 -----------------
 
-Integration tests run against a real MongoDB.
+Integration tests run against a real MongoDB. When running locally, they assume
+that Docker is present and usable, and will pull and run a container from
+`jantman/mongodb24 <https://hub.docker.com/r/jantman/mongodb24/>`_. When running
+on TravisCI, they will use the `mongodb service <https://docs.travis-ci.com/user/database-setup/#MongoDB>`_
+provided by Travis. The Travis MongoDB service currently `runs <https://travis-ci.org/jantman/RPyMostat>`_
+2.4.12 as of 2016-06-11, which I'm considering close enough to the Debian 2.4.10
+that we're targeting. If Travis upgrades that, we may need to look into alternate
+ways of running Mongo for the Travis tests.
 
 Release Checklist
 -----------------

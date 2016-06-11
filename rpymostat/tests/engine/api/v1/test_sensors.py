@@ -36,6 +36,7 @@ Jason Antman <jason@jasonantman.com> <http://www.jasonantman.com>
 """
 import sys
 import json
+import pytest
 
 from rpymostat.engine.api.v1.sensors import Sensors
 from twisted.web.server import Request
@@ -164,3 +165,11 @@ class TestSensors(object):
                 'myhost', 'foo bar', exc_info=1
             )
         ]
+
+    @pytest.mark.integration
+    def test_mongo(self, docker_mongodb):
+        assert 'local' in docker_mongodb.database_names()
+
+    @pytest.mark.integration
+    def test_mongo_again(self, docker_mongodb):
+        assert 'foobar' not in docker_mongodb.database_names()
