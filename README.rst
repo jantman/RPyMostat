@@ -80,12 +80,12 @@ Requirements
 Installation, Configuration and Usage
 -------------------------------------
 
-See the `Installation, Configuration and Usage documentation <>`_.
+See the `Installation, Configuration and Usage documentation <http://rpymostat.readthedocs.io/en/latest/Installation.html>`_.
 
 Development
 -----------
 
-See the `development documentation <>`_.
+See the `development documentation <http://rpymostat.readthedocs.io/en/latest/development.html>`_.
 
 License
 -------
