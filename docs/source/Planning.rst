@@ -210,22 +210,15 @@ Testing
 - Unit tests should mock out the txmongo connection. Integration tests require
   Mongo, and should run a Docker container of it. Need to look into how to do
   this nicely on Travis.
-  - Either look into how something like `https://github.com/pytest-dev/pytest-services <https://github.com/pytest-dev/pytest-services>`_
-    does it, or just maintain a persistent connection to Mongo for the life
-    of the test session, and clear the DB before each test (`pytest session fixtures <http://stackoverflow.com/a/14299202>`_)
-  - We'll need some real data fixtures, and to look into the right way to dump
-    and load data from/to Mongo.
+- We'll need some real data fixtures, and to look into the right way to dump
+and load data from/to Mongo.
 -  Assuming we're going with the API-based model, unit tests should be
    simple. Integration and acceptance tests are another question.
 -  **TODO:** How to test the API server and client?
 -  **TODO:** How to test the separate services, in isolation from the
    server?
--  just a concern for testing the API client. this should be simple
-   enough.
 -  **TODO:** Try to find a strong unit testing framework for the web UI;
    we can deal with integration/acceptance testing later.
--  `pytest-flask <https://pypi.python.org/pypi/pytest-flask>`__ looks
-   like it should handle things quite well
 -  **TODO:** How do I do acceptance/integration testing with service
    discovery if I have this running (like, in my house) on my LAN? Just
    use some "system number" variable?
@@ -275,26 +268,6 @@ MongoDB 2.4. Raspbian has it for ARM.
 
 - `txmongo <https://github.com/twisted/txmongo>`_ and its `docs <https://txmongo.readthedocs.io/en/latest/>`_
 - txmongo `twisted.web example <https://github.com/twisted/txmongo/blob/master/examples/webapps/twistedweb_server.tac>`_
-
-Migrations
-~~~~~~~~~~
-
-- When the Engine starts it makes an initial DB connection. It attempts to read a ``version`` from the ``db_version`` table.
-- If the table doesn't exist, we run an SQL file (included in the package) or a series of SQL statements, to setup the latest DB schema version.
-- If the table does exist, we grab the ``db_version`` (int) and run all migrations from that version to the current one (once again, either SQL files in the package or a Python script with SQL statements to run).
-- This means that I'll need to manually maintain the migrations for every version. This sounds awful, but with proper discipline, it's really not: all I need is to not make any changes directly to the DB, but rather make them in the migration files. When I start work on a new version, I create a migration file for the next DB version. In development, I have a helper command that can create a dev database initialized to any DB version, or can run migrations on the current DB, to test the code I've written. When I release a new version, if there are any migrations, I also create a schema dump of the current DB.
-
-Twisted DB Info
-~~~~~~~~~~~~~~~
-
-- `FrequentlyAskedQuestions – Twisted <https://twistedmatrix.com/trac/wiki/FrequentlyAskedQuestions#HowcanIaccessself.factoryfrommyProtocols__init__>`_
-- `[Twisted-Python] Sharing a database connection in web server <https://twistedmatrix.com/pipermail/twisted-python/2013-December/027863.html>`_
-- `Example – Using Non-Global State — Klein 15.3.1 documentation <http://klein.readthedocs.io/en/latest/examples/nonglobalstate.html>`_
-- `alex/alchimia <https://github.com/alex/alchimia>`_ allows use of `SQLAlchemy <http://www.sqlalchemy.org/>`_ core (not ORM) from Twisted
-   (`SQLAlchemy features <http://www.sqlalchemy.org/features.html>`_). `alembic <https://pypi.python.org/pypi/alembic>`_ is a SQLAlchemy
-   migration tool, so is `sqlalchemy-migrate <https://sqlalchemy-migrate.readthedocs.io/en/latest/>`_.
-- `random project from GitHub <https://github.com/TechEmpower/FrameworkBenchmarks/blob/dd906d0d9ee51c633c40704606de377f11c821a4/frameworks/Python/klein/app.py>`_ that
-   uses SQLAlchemy ORM with Klein.
 
 Physical Control Interface
 ++++++++++++++++++++++++++
