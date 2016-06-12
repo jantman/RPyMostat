@@ -67,6 +67,18 @@ class Config(object):
                            'or 2 for debug',
             'is_int': True,
             'default_value': 0
+        },
+        'mongo_host': {
+            'env_var_name': 'MONGODB_HOST',
+            'description': 'host/IP to connect to MongoDB at',
+            'is_int': False,
+            'default_value': 'localhost'
+        },
+        'mongo_port': {
+            'env_var_name': 'MONGODB_PORT',
+            'description': 'port number to connect to MongoDB at',
+            'is_int': True,
+            'default_value': 27017
         }
     }
 

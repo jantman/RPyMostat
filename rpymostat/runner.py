@@ -43,9 +43,6 @@ import logging
 
 from twisted.web.server import Site
 from twisted.internet import reactor
-# @TODO: see http://twistedmatrix.com/documents/current/core/howto/logging.html
-# and http://stackoverflow.com/questions/2493644/how-to-make-
-# twisted-use-python-logging
 from twisted.python.log import PythonLoggingObserver
 
 from rpymostat.engine.apiserver import APIServer
