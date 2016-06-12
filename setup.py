@@ -40,13 +40,6 @@ from sys import version_info
 
 from rpymostat.version import VERSION, PROJECT_URL
 
-# this is so horriby unfortunate. thanks, Twisted
-if version_info[0] > 2:
-    # at the moment, the farthest I've gotten is finding out that Klein
-    # uses twisted.web.template which is missing from the py3 distributions
-    print("ERROR: This project requires Twisted features that are only available on python2")
-    raise SystemExit(1)
-
 with open('README.rst') as file:
     long_description = file.read()
 

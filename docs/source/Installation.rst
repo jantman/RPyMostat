@@ -1,5 +1,5 @@
 RPyMostat Installation, Configuration and Usage
-================================
+===============================================
 
 Requirements
 ------------
