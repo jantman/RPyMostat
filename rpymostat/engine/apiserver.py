@@ -63,7 +63,7 @@ class APIServer(object):
         server.version = 'RPyMostat %s' % VERSION
         # initialize top-level routes first
         self.app.route('/')(self.handle_root)
-        APIv1(self.app, []).setup_routes()
+        APIv1(self, self.app, []).setup_routes()
 
     def handle_root(self, _self, request):
         """

@@ -77,10 +77,10 @@ class TestAPIv1(object):
         ) as mocks:
             self.cls.setup_routes()
         assert mocks['Sensors'].mock_calls == [
-            call(self.app, self.prefix),
+            call(self.cls, self.app, self.prefix),
             call().setup_routes()
         ]
         assert mocks['Status'].mock_calls == [
-            call(self.app, self.prefix),
+            call(self.cls, self.app, self.prefix),
             call().setup_routes()
         ]

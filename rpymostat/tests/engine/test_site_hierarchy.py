@@ -74,7 +74,8 @@ class TestSiteHierarchy(object):
     def setup(self):
         self.app = Mock(spec=Klein)
         self.prefix = ['my', 'parent']
-        self.cls = TestClass(self.app, self.prefix)
+        self.apiserver = Mock()
+        self.cls = TestClass(self.apiserver, self.app, self.prefix)
 
     def test_class(self):
         with patch('%s.logger' % pbm, autospec=True) as mock_logger:
@@ -86,7 +87,7 @@ class TestSiteHierarchy(object):
             ) as mocks:
                 mocks['make_prefix'].return_value = ['foo', 'bar']
                 mocks['prefix_list_to_str'].return_value = 'foo/bar'
-                cls = TestClass(self.app, self.prefix)
+                cls = TestClass(self.apiserver, self.app, self.prefix)
         assert mocks['make_prefix'].mock_calls == [
             call(cls, self.prefix, 'v1')
         ]
@@ -99,18 +100,19 @@ class TestSiteHierarchy(object):
         assert cls.prefix == ['foo', 'bar']
         assert cls.prefix_str == 'foo/bar'
         assert cls.app == self.app
+        assert cls.apiserver == self.apiserver
 
     def test_class_not_klein(self):
         with pytest.raises(AssertionError):
-            TestClass(Mock(), self.prefix)
+            TestClass(self.apiserver, Mock(), self.prefix)
 
     def test_class_prefix_not_list(self):
         with pytest.raises(AssertionError):
-            TestClass(self.app, 'foo')
+            TestClass(self.apiserver, self.app, 'foo')
 
     def test_class_prefix_part_base(self):
         with pytest.raises(AssertionError):
-            BadBaseTestClass(self.app, self.prefix)
+            BadBaseTestClass(self.apiserver, self.app, self.prefix)
 
     def test_make_prefix(self):
         assert self.cls.make_prefix(

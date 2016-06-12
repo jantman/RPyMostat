@@ -34,7 +34,7 @@ class TestAPIServer:
         assert cls.app == mock_klein
         assert server.version == 'RPyMostat %s' % VERSION
         assert mocks['APIv1'].mock_calls == [
-            call(mock_klein, []),
+            call(cls, mock_klein, []),
             call().setup_routes()
         ]
 

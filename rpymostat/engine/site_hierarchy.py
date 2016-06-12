@@ -52,13 +52,16 @@ class SiteHierarchy(object):
 
     prefix_part = 'base'
 
-    def __init__(self, app, parent_prefix):
+    def __init__(self, apiserver, app, parent_prefix):
         """
         Initialize a site hierarchy component. Takes the parent's prefix and
         sets up all routes under its own prefix. After classes implementing
         this interface are instantiated, their ``setup_routes`` method must
         be called.
 
+        :param apiserver: The :py:class:`~.APIServer` instance at the root of
+          the project/application
+        :type apiserver: rpymostat.engine.apiserver.APIServer
         :param app: the Klein app to add routes in
         :type app: instance of :py:class:`klein.app.Klein`
         :param parent_prefix: The parent hierarchy's prefix
@@ -71,6 +74,7 @@ class SiteHierarchy(object):
         self.prefix_str = self.prefix_list_to_str(self.prefix)
         logger.debug('initializing prefix: %s', self.prefix_str)
         self.app = app
+        self.apiserver = apiserver
 
     def make_prefix(self, parent_list, prefix_str):
         """
