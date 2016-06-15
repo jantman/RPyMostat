@@ -39,9 +39,9 @@ from txmongo.connection import ConnectionPool
 from pymongo import MongoClient
 import logging
 
-from rpymostat import MONGO_DB_NAME
-
 logger = logging.getLogger(__name__)
+
+MONGO_DB_NAME = 'rpymostat'
 
 
 def connect_mongodb(host, port):
@@ -61,7 +61,6 @@ def connect_mongodb(host, port):
     logger.info('Connecting to MongoDB via txmongo at %s', uri)
     try:
         conn = ConnectionPool(uri=uri)
-        conn.get_default_database()
     except:
         logger.critical('Error connecting to MongoDB at %s', uri, exc_info=1)
         raise SystemExit(2)
@@ -71,7 +70,9 @@ def connect_mongodb(host, port):
 def setup_mongodb(host, port):
     """
     Connect synchronously (outside/before the reactor loop) to MongoDB
-    and setup whatever we need. Raise an exception if this fails.
+    and setup whatever we need. Raise an exception if this fails. This mainly
+    exists to test that the DB is running and accessible before running the
+    reactor loop.
 
     :param host: host to connect to MongoDB on.
     :type host: str
@@ -80,9 +81,10 @@ def setup_mongodb(host, port):
     """
     logger.debug('Connecting to MongoDB via pymongo at %s:%s', host, port)
     try:
-        client = MongoClient(host, port)
-        client[MONGO_DB_NAME]
+        client = MongoClient(host, port, connect=True)
+        client.get_database(MONGO_DB_NAME)
     except:
         logger.critical("Error connecting to MongoDB at %s:%s",
                         host, port, exc_info=1)
         raise SystemExit(1)
+    logger.debug('PyMongo connection successful.')
