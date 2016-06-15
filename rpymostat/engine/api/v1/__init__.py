@@ -55,5 +55,5 @@ class APIv1(SiteHierarchy):
 
     def setup_routes(self):
         """Setup routes for subparts of the hierarchy."""
-        Sensors(self, self.app, self.prefix).setup_routes()
-        Status(self, self.app, self.prefix).setup_routes()
+        Sensors(self, self.app, self.dbconn, self.prefix).setup_routes()
+        Status(self, self.app, self.dbconn, self.prefix).setup_routes()

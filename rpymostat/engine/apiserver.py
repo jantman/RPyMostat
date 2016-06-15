@@ -67,7 +67,7 @@ class APIServer(object):
         # initialize top-level routes first
         self.dbconn = dbconn
         self.app.route('/')(self.handle_root)
-        APIv1(self, self.app, []).setup_routes()
+        APIv1(self, self.app, dbconn, []).setup_routes()
 
     def handle_root(self, _self, request):
         """

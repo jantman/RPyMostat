@@ -55,7 +55,7 @@ pb = '%s.APIv1' % pbm
 
 class TestClass(APIv1):
 
-    def __init__(self, app, prefix):
+    def __init__(self, apiserver, app, dbconn, prefix):
         pass
 
 
@@ -64,9 +64,13 @@ class TestAPIv1(object):
     def setup(self):
         self.app = Mock(spec=Klein)
         self.prefix = ['my', 'parent']
-        self.cls = TestClass(self.app, self.prefix)
+        self.apiserver = Mock()
+        self.dbconn = Mock()
+        self.cls = TestClass(self.apiserver, self.app, self.dbconn, self.prefix)
         self.cls.app = self.app
         self.cls.prefix = self.prefix
+        self.cls.dbconn = self.dbconn
+        self.cls.apiserver = self.apiserver
 
     def test_class(self):
         with patch.multiple(
@@ -77,10 +81,10 @@ class TestAPIv1(object):
         ) as mocks:
             self.cls.setup_routes()
         assert mocks['Sensors'].mock_calls == [
-            call(self.cls, self.app, self.prefix),
+            call(self.cls, self.app, self.dbconn, self.prefix),
             call().setup_routes()
         ]
         assert mocks['Status'].mock_calls == [
-            call(self.cls, self.app, self.prefix),
+            call(self.cls, self.app, self.dbconn, self.prefix),
             call().setup_routes()
         ]
