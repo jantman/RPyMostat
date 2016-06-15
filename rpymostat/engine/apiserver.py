@@ -54,14 +54,18 @@ class APIServer(object):
     # Note - docs for this are overridden in docs/source/conf.py
     app = Klein()
 
-    def __init__(self):
+    def __init__(self, dbconn):
         """
         Initialize API Server. Mainly just instantiates the API version classes
         (currently just :py:class:`~.APIv1`) and sets up any global/top-level
         routes.
+
+        :param dbconn: MongoDB ConnectionPool
+        :type dbconn: txmongo.connection.ConnectionPool
         """
         server.version = 'RPyMostat %s' % VERSION
         # initialize top-level routes first
+        self.dbconn = dbconn
         self.app.route('/')(self.handle_root)
         APIv1(self, self.app, []).setup_routes()
 

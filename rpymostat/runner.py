@@ -48,6 +48,7 @@ from twisted.python.log import PythonLoggingObserver
 from rpymostat.engine.apiserver import APIServer
 from rpymostat.config import Config
 from rpymostat.version import VERSION, PROJECT_URL
+from rpymostat.db import connect_mongodb
 
 FORMAT = "[%(levelname)s %(filename)s:%(lineno)s - %(funcName)20s() ] " \
          "%(message)s"
@@ -152,8 +153,9 @@ def main(argv=None):
     elif args.verbose == 1 or conf.get('verbose') == 1:
         set_log_info()
 
+    dbconn = connect_mongodb(conf.get('mongo_host'), conf.get('mongo_port'))
     logger.debug("instantiating apiserver")
-    apiserver = APIServer()
+    apiserver = APIServer(dbconn)
     apisite = Site(apiserver.app.resource())
     logger.debug("reactor.listenTCP")
     reactor.listenTCP(conf.get('api_port'), apisite)

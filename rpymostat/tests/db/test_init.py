@@ -34,5 +34,3 @@ AUTHORS:
 Jason Antman <jason@jasonantman.com> <http://www.jasonantman.com>
 ##################################################################################
 """
-
-MONGO_DB_NAME = 'rpymostat'

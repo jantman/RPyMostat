@@ -34,3 +34,55 @@ AUTHORS:
 Jason Antman <jason@jasonantman.com> <http://www.jasonantman.com>
 ##################################################################################
 """
+
+from txmongo.connection import ConnectionPool
+from pymongo import MongoClient
+import logging
+
+from rpymostat import MONGO_DB_NAME
+
+logger = logging.getLogger(__name__)
+
+
+def connect_mongodb(host, port):
+    """
+    Run :py:func:`~.setup_mongodb`. If that succeeds, connect to MongoDB via
+    ``txmongo``. Return a txmongo ConnectionPool.
+
+    :param host: host to connect to MongoDB on.
+    :type host: str
+    :param port: port to connect to MongoDB on.
+    :type port: int
+    :return: MongoDB connection pool
+    :rtype: txmongo.connection.ConnectionPool
+    """
+    setup_mongodb(host, port)
+    uri = 'mongodb://%s:%d' % (host, port)
+    logger.info('Connecting to MongoDB via txmongo at %s', uri)
+    try:
+        conn = ConnectionPool(uri=uri)
+        conn.get_default_database()
+    except:
+        logger.critical('Error connecting to MongoDB at %s', uri, exc_info=1)
+        raise SystemExit(2)
+    return conn
+
+
+def setup_mongodb(host, port):
+    """
+    Connect synchronously (outside/before the reactor loop) to MongoDB
+    and setup whatever we need. Raise an exception if this fails.
+
+    :param host: host to connect to MongoDB on.
+    :type host: str
+    :param port: port to connect to MongoDB on.
+    :type port: int
+    """
+    logger.debug('Connecting to MongoDB via pymongo at %s:%s', host, port)
+    try:
+        client = MongoClient(host, port)
+        client[MONGO_DB_NAME]
+    except:
+        logger.critical("Error connecting to MongoDB at %s:%s",
+                        host, port, exc_info=1)
+        raise SystemExit(1)

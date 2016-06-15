@@ -49,6 +49,8 @@ with open('CHANGES.rst') as file:
 requirements = [
     'Twisted>=14.0.0,<15.0.0',
     'klein',
+    'txmongo',
+    'pymongo>=3.0.0,<4.0.0'
 ]
     
 classifiers = [

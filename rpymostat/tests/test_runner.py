@@ -40,6 +40,8 @@ import sys
 import logging
 import pytest
 
+from txmongo.connection import ConnectionPool
+
 from rpymostat.runner import (main, parse_args, show_config, set_log_info,
                               set_log_debug, set_log_level_format)
 from rpymostat.version import PROJECT_URL, VERSION
@@ -60,17 +62,22 @@ pbm = 'rpymostat.runner'
 
 class TestRunner(object):
 
+    def setup(self):
+        self.mock_mongo = Mock(spec_set=ConnectionPool)
+
     def test_main(self):
         """
         test main function
         """
 
         def se_config_get(name):
-            if name == 'api_port':
-                return 8088
-            if name == 'verbose':
-                return 0
-            return None
+            x = {
+                'api_port': 8088,
+                'verbose': 0,
+                'mongo_host': 'mhost',
+                'mongo_port': 1234
+            }
+            return x.get(name, None)
 
         mock_args = Mock(verbose=0, show_config=False)
         with patch('%s.logger' % pbm, autospec=True) as mocklogger:
@@ -86,14 +93,17 @@ class TestRunner(object):
                 Config=DEFAULT,
                 set_log_info=DEFAULT,
                 set_log_debug=DEFAULT,
+                connect_mongodb=DEFAULT,
             ) as mocks:
                 mocks['Config'].return_value.get.side_effect = se_config_get
                 mocks['parse_args'].return_value = mock_args
+                mocks['connect_mongodb'].return_value = self.mock_mongo
                 main([])
         assert mocks['show_config'].mock_calls == []
         assert mocks['parse_args'].mock_calls == [call([])]
+        assert mocks['connect_mongodb'].mock_calls == [call('mhost', 1234)]
         assert mocks['APIServer'].mock_calls == [
-            call(),
+            call(self.mock_mongo),
             call().app.resource()
         ]
         site_app_res = mocks[
@@ -124,11 +134,13 @@ class TestRunner(object):
         """
 
         def se_config_get(name):
-            if name == 'api_port':
-                return 8088
-            if name == 'verbose':
-                return 0
-            return None
+            x = {
+                'api_port': 8088,
+                'verbose': 0,
+                'mongo_host': 'mhost',
+                'mongo_port': 1234
+            }
+            return x.get(name, None)
 
         mock_args = Mock(verbose=0, show_config=True)
         with patch('%s.logger' % pbm, autospec=True) as mocklogger:
@@ -144,9 +156,11 @@ class TestRunner(object):
                 Config=DEFAULT,
                 set_log_info=DEFAULT,
                 set_log_debug=DEFAULT,
+                connect_mongodb=DEFAULT,
             ) as mocks:
                 mocks['Config'].return_value.get.side_effect = se_config_get
                 mocks['parse_args'].return_value = mock_args
+                mocks['connect_mongodb'].return_value = self.mock_mongo
                 with pytest.raises(SystemExit) as excinfo:
                     main([])
         assert excinfo.value.code == 1
@@ -155,6 +169,7 @@ class TestRunner(object):
         ]
         assert mocks['parse_args'].mock_calls == [call([])]
         assert mocks['APIServer'].mock_calls == []
+        assert mocks['connect_mongodb'].mock_calls == []
         assert mocks['Site'].mock_calls == []
         assert mocks['reactor'].mock_calls == []
         assert mocks['PythonLoggingObserver'].mock_calls == []
@@ -168,11 +183,13 @@ class TestRunner(object):
         """
 
         def se_config_get(name):
-            if name == 'api_port':
-                return 8088
-            if name == 'verbose':
-                return 0
-            return None
+            x = {
+                'api_port': 8088,
+                'verbose': 0,
+                'mongo_host': 'mhost',
+                'mongo_port': 1234
+            }
+            return x.get(name, None)
 
         mock_args = Mock(verbose=1, show_config=False)
         with patch('%s.logger' % pbm, autospec=True):
@@ -188,6 +205,7 @@ class TestRunner(object):
                 Config=DEFAULT,
                 set_log_info=DEFAULT,
                 set_log_debug=DEFAULT,
+                connect_mongodb=DEFAULT,
             ) as mocks:
                 mocks['Config'].return_value.get.side_effect = se_config_get
                 mocks['parse_args'].return_value = mock_args
@@ -207,11 +225,13 @@ class TestRunner(object):
         """
 
         def se_config_get(name):
-            if name == 'api_port':
-                return 8088
-            if name == 'verbose':
-                return 0
-            return None
+            x = {
+                'api_port': 8088,
+                'verbose': 0,
+                'mongo_host': 'mhost',
+                'mongo_port': 1234
+            }
+            return x.get(name, None)
 
         mock_args = Mock(verbose=2, show_config=False)
         with patch('%s.logger' % pbm, autospec=True):
@@ -227,6 +247,7 @@ class TestRunner(object):
                 Config=DEFAULT,
                 set_log_info=DEFAULT,
                 set_log_debug=DEFAULT,
+                connect_mongodb=DEFAULT,
             ) as mocks:
                 mocks['Config'].return_value.get.side_effect = se_config_get
                 mocks['parse_args'].return_value = mock_args
@@ -244,11 +265,13 @@ class TestRunner(object):
         """
 
         def se_config_get(name):
-            if name == 'api_port':
-                return 8088
-            if name == 'verbose':
-                return 1
-            return None
+            x = {
+                'api_port': 8088,
+                'verbose': 1,
+                'mongo_host': 'mhost',
+                'mongo_port': 1234
+            }
+            return x.get(name, None)
 
         mock_args = Mock(verbose=0, show_config=False)
         with patch('%s.logger' % pbm, autospec=True):
@@ -264,6 +287,7 @@ class TestRunner(object):
                 Config=DEFAULT,
                 set_log_info=DEFAULT,
                 set_log_debug=DEFAULT,
+                connect_mongodb=DEFAULT,
             ) as mocks:
                 mocks['Config'].return_value.get.side_effect = se_config_get
                 mocks['parse_args'].return_value = mock_args
@@ -281,11 +305,13 @@ class TestRunner(object):
         """
 
         def se_config_get(name):
-            if name == 'api_port':
-                return 8088
-            if name == 'verbose':
-                return 2
-            return None
+            x = {
+                'api_port': 8088,
+                'verbose': 2,
+                'mongo_host': 'mhost',
+                'mongo_port': 1234
+            }
+            return x.get(name, None)
 
         mock_args = Mock(verbose=0, show_config=False)
         with patch('%s.logger' % pbm, autospec=True):
@@ -301,6 +327,7 @@ class TestRunner(object):
                 Config=DEFAULT,
                 set_log_info=DEFAULT,
                 set_log_debug=DEFAULT,
+                connect_mongodb=DEFAULT,
             ) as mocks:
                 mocks['Config'].return_value.get.side_effect = se_config_get
                 mocks['parse_args'].return_value = mock_args
@@ -318,11 +345,13 @@ class TestRunner(object):
         """
 
         def se_config_get(name):
-            if name == 'api_port':
-                return 8088
-            if name == 'verbose':
-                return 2
-            return None
+            x = {
+                'api_port': 8088,
+                'verbose': 2,
+                'mongo_host': 'mhost',
+                'mongo_port': 1234
+            }
+            return x.get(name, None)
 
         mock_args = Mock(verbose=1, show_config=False)
         with patch('%s.logger' % pbm, autospec=True):
@@ -338,6 +367,7 @@ class TestRunner(object):
                 Config=DEFAULT,
                 set_log_info=DEFAULT,
                 set_log_debug=DEFAULT,
+                connect_mongodb=DEFAULT,
             ) as mocks:
                 mocks['Config'].return_value.get.side_effect = se_config_get
                 mocks['parse_args'].return_value = mock_args

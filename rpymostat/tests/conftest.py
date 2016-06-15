@@ -127,14 +127,27 @@ def docker_mongodb(request):
 
 
 def teardown_docker_mongo():
+    if os.environ.get('LEAVE_MONGO_RUNNING', None) is not None:
+        sys.stderr.write("Leaving MongoDB container running.\n")
+        return
     c = Client(base_url='unix://var/run/docker.sock')
     destroy_container_if_exists(c)
 
 
 def setup_docker_mongo():
     c = Client(base_url='unix://var/run/docker.sock')
+    if os.environ.get('LEAVE_MONGO_RUNNING', None) is not None:
+        cont_info = get_container_info(c, name=CONTAINER_NAME)
+        if cont_info is not None:
+            mongo_port = get_container_host_port(cont_info, 27017)
+            sys.stderr.write("Using existing container %s on port %d\n" % (
+                cont_info['Id'], mongo_port
+            ))
+            return mongo_port
+    else:
+        destroy_container_if_exists(c)
+    # container is not already running
     pull_image(c)
-    destroy_container_if_exists(c)
     mongo_port = run_container(c)
     return mongo_port
 
