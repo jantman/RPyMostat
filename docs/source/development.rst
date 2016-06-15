@@ -51,6 +51,11 @@ provided by Travis. The Travis MongoDB service currently `runs <https://travis-c
 that we're targeting. If Travis upgrades that, we may need to look into alternate
 ways of running Mongo for the Travis tests.
 
+By default, when run locally, the integration tests will start up the MongoDB
+container when the test session starts, and stop and remove it when the session
+is over. To leave the container running and reuse it for further test sessions,
+export the ``LEAVE_MONGO_RUNNING`` environment variable.
+
 Release Checklist
 -----------------
 
