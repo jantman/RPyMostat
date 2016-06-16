@@ -37,8 +37,12 @@ Jason Antman <jason@jasonantman.com> <http://www.jasonantman.com>
 
 import abc  # noqa
 import logging
+import json
+
+from twisted.internet.defer import inlineCallbacks, returnValue
 
 from rpymostat.engine.site_hierarchy import SiteHierarchy
+from rpymostat.db import get_collection, COLL_SENSORS
 
 logger = logging.getLogger(__name__)
 
@@ -54,11 +58,10 @@ class Status(SiteHierarchy):
         """Setup routes for subparts of the hierarchy."""
         self.add_route(self.status)
 
+    @inlineCallbacks
     def status(self, _self, request):
         """
-        Handle application status request.
-
-        @TODO this should be meaningful JSON.
+        Report on application and dependency status.
 
         This serves :http:get:`/v1/status`
 
@@ -67,8 +70,7 @@ class Status(SiteHierarchy):
         :type request: instance of :class:`twisted.web.server.Request`
 
         <HTTPAPI>
-        Return application status information. Currently just returns the
-        text string "Status: Running".
+        Return application status information (mainly dependent services).
 
         Served by :py:meth:`.status`.
 
@@ -76,7 +78,7 @@ class Status(SiteHierarchy):
 
         .. sourcecode:: http
 
-          GET / HTTP/1.1
+          GET /v1/status HTTP/1.1
           Host: example.com
 
         **Example Response**:
@@ -84,10 +86,35 @@ class Status(SiteHierarchy):
         .. sourcecode:: http
 
           HTTP/1.1 200 OK
-          Content-Type: text/plain
+          Content-Type: application/json
 
-          Status: Running
+          {
+              "status": true,
+              "dependencies": {
+                  "mongodb": true
+              }
+          }
 
         :statuscode 200: operational
+        :statuscode 503: non-operational
         """
-        return "Status: Running"
+        status = {'dependencies': {}}
+        is_ok = True
+        try:
+            coll = get_collection(self.dbconn, COLL_SENSORS)
+            yield coll.find(limit=1)
+            status['dependencies']['mongodb'] = True
+        except:
+            logger.error('DB connection test failed', exc_info=1)
+            status['dependencies']['mongodb'] = False
+            is_ok = False
+        status['status'] = is_ok
+        request.responseHeaders.addRawHeader(
+            b"content-type", b"application/json"
+        )
+        resp = json.dumps(status)
+        if is_ok:
+            request.setResponseCode(200)
+        else:
+            request.setResponseCode(503)
+        returnValue(resp)

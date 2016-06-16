@@ -43,6 +43,9 @@ logger = logging.getLogger(__name__)
 
 MONGO_DB_NAME = 'rpymostat'
 
+# Collection name constants
+COLL_SENSORS = 'sensors'
+
 
 def connect_mongodb(host, port):
     """
@@ -88,3 +91,19 @@ def setup_mongodb(host, port):
                         host, port, exc_info=1)
         raise SystemExit(1)
     logger.debug('PyMongo connection successful.')
+
+
+def get_collection(db_conn, collection_name):
+    """
+    Return the specified collection object from the database.
+
+    :param db_conn: MongoDB ConnectionPool
+    :type db_conn: txmongo.connection.ConnectionPool
+    :param collection_name: name of the collection to get; should be a
+      constant in this module
+    :type collection_name: str
+    :return: txmongo.collection.Collection
+    """
+    db = getattr(db_conn, MONGO_DB_NAME)
+    coll = getattr(db, collection_name)
+    return coll

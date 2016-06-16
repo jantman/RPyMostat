@@ -38,7 +38,9 @@ Jason Antman <jason@jasonantman.com> <http://www.jasonantman.com>
 import sys
 import pytest
 
-from rpymostat.db import MONGO_DB_NAME, connect_mongodb, setup_mongodb
+from rpymostat.db import (
+    MONGO_DB_NAME, connect_mongodb, setup_mongodb, get_collection
+)
 
 # https://code.google.com/p/mock/issues/detail?id=249
 # py>=3.4 should use unittest.mock not the mock package on pypi
@@ -46,9 +48,9 @@ if (
         sys.version_info[0] < 3 or
         sys.version_info[0] == 3 and sys.version_info[1] < 4
 ):
-    from mock import patch, call, DEFAULT  # noqa
+    from mock import patch, call, Mock, DEFAULT  # noqa
 else:
-    from unittest.mock import patch, call, DEFAULT  # noqa
+    from unittest.mock import patch, call, Mock, DEFAULT  # noqa
 
 pbm = 'rpymostat.db'
 
@@ -135,3 +137,9 @@ class TestDBInit(object):
             call.critical('Error connecting to MongoDB at %s:%s',
                           'h', 12, exc_info=1)
         ]
+
+    def test_get_collection(self):
+        mock_coll = Mock()
+        mock_db = Mock(foo=mock_coll)
+        mock_conn = Mock(rpymostat=mock_db)
+        assert get_collection(mock_conn, 'foo') == mock_coll

@@ -35,8 +35,12 @@ Jason Antman <jason@jasonantman.com> <http://www.jasonantman.com>
 ##################################################################################
 """
 import sys
+import json
 
 from rpymostat.engine.api.v1.status import Status
+from twisted.web.server import Request
+from txmongo.collection import Collection
+from rpymostat.db import COLL_SENSORS
 
 # https://code.google.com/p/mock/issues/detail?id=249
 # py>=3.4 should use unittest.mock not the mock package on pypi
@@ -54,17 +58,17 @@ pb = '%s.Status' % pbm
 
 class TestClass(Status):
 
-    def __init__(self, app, prefix):
+    def __init__(self, apiserver, app, dbconn, prefix):
         pass
 
 
 class TestStatus(object):
 
     def test_prefix_part(self):
-        assert TestClass(Mock(), []).prefix_part == 'status'
+        assert TestClass(Mock(), Mock(), Mock(), []).prefix_part == 'status'
 
     def test_setup_routes(self):
-        cls = TestClass(Mock(), [])
+        cls = TestClass(Mock(), Mock(), Mock(), [])
         with patch('%s.add_route' % pb, autospec=True) as mock_add_route:
             cls.setup_routes()
         assert mock_add_route.mock_calls == [
@@ -72,5 +76,71 @@ class TestStatus(object):
         ]
 
     def test_status(self):
-        cls = TestClass(Mock(), [])
-        assert cls.status(cls, Mock()) == 'Status: Running'
+        mock_req = Mock(spec_set=Request)
+        mock_headers = Mock()
+        type(mock_req).responseHeaders = mock_headers
+        mock_coll = Mock(spec_set=Collection)
+        mock_coll.find.return_value = []
+        mock_dbconn = Mock()
+        cls = TestClass(Mock(), Mock(), mock_dbconn, [])
+        cls.dbconn = mock_dbconn
+        with patch('%s.get_collection' % pbm, autospec=True) as mock_get_coll:
+            with patch('%s.returnValue' % pbm) as mock_retval:
+                with patch('%s.logger' % pbm, autospec=True) as mock_logger:
+                    mock_get_coll.return_value = mock_coll
+                    cls.status(cls, mock_req)
+        expected = json.dumps({
+            'status': True,
+            'dependencies': {'mongodb': True}
+        })
+        assert mock_headers.mock_calls == [
+            call.addRawHeader(
+                b"content-type", b"application/json")
+        ]
+        assert mock_coll.mock_calls == [call.find(limit=1)]
+        assert mock_req.mock_calls == [call.setResponseCode(200)]
+        assert mock_get_coll.mock_calls == [call(mock_dbconn, COLL_SENSORS)]
+        # need to mock out get_collection and the find method on its result
+        # also mock the request object and assert on calls
+        assert mock_retval.mock_calls == [
+            call(expected)
+        ]
+        assert mock_logger.mock_calls == []
+
+    def test_status_mongo_fail(self):
+
+        def se_exc(**kwargs):
+            raise Exception()
+
+        mock_req = Mock(spec_set=Request)
+        mock_headers = Mock()
+        type(mock_req).responseHeaders = mock_headers
+        mock_coll = Mock(spec_set=Collection)
+        mock_coll.find.side_effect = se_exc
+        mock_dbconn = Mock()
+        cls = TestClass(Mock(), Mock(), mock_dbconn, [])
+        cls.dbconn = mock_dbconn
+        with patch('%s.get_collection' % pbm, autospec=True) as mock_get_coll:
+            with patch('%s.returnValue' % pbm) as mock_retval:
+                with patch('%s.logger' % pbm, autospec=True) as mock_logger:
+                    mock_get_coll.return_value = mock_coll
+                    cls.status(cls, mock_req)
+        expected = json.dumps({
+            'status': False,
+            'dependencies': {'mongodb': False}
+        })
+        assert mock_headers.mock_calls == [
+            call.addRawHeader(
+                b"content-type", b"application/json")
+        ]
+        assert mock_coll.mock_calls == [call.find(limit=1)]
+        assert mock_req.mock_calls == [call.setResponseCode(503)]
+        assert mock_get_coll.mock_calls == [call(mock_dbconn, COLL_SENSORS)]
+        # need to mock out get_collection and the find method on its result
+        # also mock the request object and assert on calls
+        assert mock_retval.mock_calls == [
+            call(expected)
+        ]
+        assert mock_logger.mock_calls == [
+            call.error('DB connection test failed', exc_info=1)
+        ]
