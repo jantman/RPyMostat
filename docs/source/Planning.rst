@@ -203,6 +203,13 @@ UI
 -  I know some of the python API clients I've worked with do this... I just need to figure out how, because it's an area I've never really looked into.
 - Just provide a pretty (or usable) wrapper around the decision engine API. Honestly I'd love it if this could be generated entirely dynamically - i.e. the decision engine's plugins know about some input data types, and the web UI knows how to render them. The web UI is just a pile of components, and pulls information about what it needs dynamically from the decision engine. That's really complicated to implement, but OTOH, I'm not sure how else we allow pluggable scheduling and decision modules.
 - visual schedule overlay like PagerDuty
+- [tastejs/todomvc: Helping you select an MV* framework - Todo apps for Backbone.js, Ember.js, AngularJS, and many more](https://github.com/tastejs/todomvc) / [TodoMVC](http://todomvc.com/)
+- https://en.wikipedia.org/wiki/HATEOAS
+- __looks good__ - [Writing a Javascript REST client - miguelgrinberg.com](http://blog.miguelgrinberg.com/post/writing-a-javascript-rest-client) - [Twitter Bootstrap](http://twitter.github.io/bootstrap/) for presentation (see [fluid layout model](http://getbootstrap.com/2.3.2/examples/fluid.html)), [Knockout](http://knockoutjs.com/) for MVC.
+- [vinta/awesome-python: A curated list of awesome Python frameworks, libraries, software and resources](https://github.com/vinta/awesome-python#database-drivers)
+- [Ajenti Core - a Web-UI Toolkit](http://ajenti.org/core/) - has a really nice UI, and is Python on the backend
+- [Backbone.js](http://backbonejs.org/) - might be good... it's an in-browser MVC. A little worried about memory use.
+- [Creating a Single Page Todo App with Node and Angular | Scotch](https://scotch.io/tutorials/creating-a-single-page-todo-app-with-node-and-angular)
 
 Testing
 +++++++
