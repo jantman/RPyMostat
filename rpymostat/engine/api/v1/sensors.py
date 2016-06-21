@@ -40,6 +40,7 @@ import logging
 import json
 
 from rpymostat.engine.site_hierarchy import SiteHierarchy
+from rpymostat.db.sensors import update_sensor
 
 logger = logging.getLogger(__name__)
 
@@ -155,7 +156,16 @@ class Sensors(SiteHierarchy):
           HTTP/1.1 202 OK
           Content-Type: application/json
 
-          {"status": "accepted", "id": 1234}
+          {"status": "ok", "ids": [ "id_1", "id_2" ]}
+
+        **Example Response**:
+
+        .. sourcecode:: http
+
+          HTTP/1.1 422
+          Content-Type: application/json
+
+          {"status": "error", "error": "host_id field is missing"}
 
         :<json host_id: *(string)* the unique identifier of the sending host
         :<json sensors: *(object)* array of sensor data objects, conforming to
@@ -164,7 +174,6 @@ class Sensors(SiteHierarchy):
           ``accepted`` or ``done``
         :>json id: *(int)* unique identifier for the update
         :statuscode 201: update has been made in the database
-        :statuscode 202: update has been queued
         """
         try:
             raw = request.content.getvalue()
@@ -187,6 +196,55 @@ class Sensors(SiteHierarchy):
             return "Invalid JSON."
         logger.debug('Received sensor update request from %s with content: %s',
                      request.client.host, data)
-        # @TODO do something with the data here
-        request.setResponseCode(200)  # change to 202 if queueing
-        return "sensor updated."
+        request.responseHeaders.addRawHeader(
+            b"content-type", b"application/json"
+        )
+        if 'host_id' not in data:
+            request.setResponseCode(422)
+            return json.dumps({
+                'status': 'error',
+                'error': 'host_id field missing from POST data'
+            })
+        if 'sensors' not in data:
+            request.setResponseCode(422)
+            return json.dumps({
+                'status': 'error',
+                'error': 'sensors field missing from POST data'
+            })
+        if not isinstance(data['sensors'], type({})):
+            request.setResponseCode(422)
+            return json.dumps({
+                'status': 'error',
+                'error': 'sensors field must be a JSON object (deserialize to' \
+                ' a python dict)'
+            })
+        if len(data['sensors'] < 1):
+            request.setResponseCode(422)
+            return json.dumps({
+                'status': 'error',
+                'error': 'sensors field must not be empty'
+            })
+        ids = []
+        failed = 0
+        for sensor_id, sensor_data in data['sensors'].iteritems():
+            try:
+                _id = update_sensor(
+                    self.dbconn,
+                    data['host_id'],
+                    sensor_id,
+                    sensor_data['value'],
+                    sensor_type=sensor_data.get('type', None),
+                    sensor_alias=sensor_data.get('alias', None),
+                    extra=sensor_data.get('extra', None)
+                )
+                ids.append(_id)
+            except Exception as ex:
+                logger.error('Error updating sensor %s: %s', sensor_id,
+                             sensor_data, exc_info=1)
+                failed += 1
+        if failed:
+            request.setResponseCode(400)
+            return json.dumps({'status': 'partial', 'ids': ids,
+                               'error': '%d sensor updates failed' % failed})
+        request.setResponseCode(200)
+        return json.dumps({'status': 'ok', 'ids': ids})
