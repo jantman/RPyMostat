@@ -218,7 +218,7 @@ class Sensors(SiteHierarchy):
                 'error': 'sensors field must be a JSON object (deserialize to' \
                 ' a python dict)'
             })
-        if len(data['sensors'] < 1):
+        if len(data['sensors']) < 1:
             request.setResponseCode(422)
             return json.dumps({
                 'status': 'error',
@@ -237,6 +237,8 @@ class Sensors(SiteHierarchy):
                     sensor_alias=sensor_data.get('alias', None),
                     extra=sensor_data.get('extra', None)
                 )
+                logger.debug('update_sensor() return value: %s (%s)',
+                             _id, type(_id))
                 ids.append(_id)
             except Exception as ex:
                 logger.error('Error updating sensor %s: %s', sensor_id,
