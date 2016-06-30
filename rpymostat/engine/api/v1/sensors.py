@@ -246,7 +246,12 @@ class Sensors(SiteHierarchy):
                 failed += 1
         if failed:
             request.setResponseCode(400)
-            return json.dumps({'status': 'partial', 'ids': ids,
-                               'error': '%d sensor updates failed' % failed})
+            if failed == len(data['sensors']):
+                return json.dumps({'status': 'failed'})
+            else:
+                return json.dumps({
+                    'status': 'partial', 'ids': ids,
+                    'error': '%d sensor updates failed' % failed
+                })
         request.setResponseCode(200)
         return json.dumps({'status': 'ok', 'ids': ids})
