@@ -56,7 +56,7 @@ def update_sensor(dbconn, host_id, sensor_id, value, sensor_type=None,
     :param sensor_id: unique sensor ID
     :type sensor_id: str
     :param value: sensor reading in degress Celsius
-    :type value: floar
+    :type value: float
     :param sensor_type: description of the type of sensor
     :type sensor_type: str
     :param sensor_alias: human-readable alias for the sensor
