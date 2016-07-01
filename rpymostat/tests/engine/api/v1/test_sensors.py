@@ -103,7 +103,7 @@ class TestSensors(object):
                     mock_upd.return_value = 'myid'
                     mock_parse.return_value = req_data
                     res = self.cls.update(None, mock_req)
-        assert res.result == '{"status": "ok", "ids": ["myid"]}'
+        assert res.result == '{"ids": ["myid"], "status": "ok"}'
         assert mock_parse.mock_calls == [call(mock_req)]
         assert mock_req.mock_calls == [call.setResponseCode(201)]
         assert mock_logger.mock_calls == [
@@ -116,9 +116,24 @@ class TestSensors(object):
         ]
 
     @pytest.mark.integration
-    def test_mongo(self, docker_mongodb):
-        assert 'local' in docker_mongodb.database_names()
-
-    @pytest.mark.integration
-    def test_mongo_again(self, docker_mongodb):
-        assert 'foobar' not in docker_mongodb.database_names()
+    def test_integration_update(self, docker_mongodb):
+        req_data = {
+            'host_id': 'myhostid',
+            'sensors': {
+                'sensor1': {
+                    'type': 's1type',
+                    'value': 12.345,
+                    'alias': 's1alias',
+                    'extra': 'extraS1'
+                }
+            }
+        }
+        req_json = json.dumps(req_data)
+        mock_req = MagicMock(spec_set=Request)
+        type(mock_req).responseHeaders = Mock()
+        mock_req.content.getvalue.return_value = req_json
+        type(mock_req).client = Mock(host='myhost')
+        """
+        @TODO - integration test - set the current value in Mongo,
+        send a request, check the response and the new Mongo value.
+        """
