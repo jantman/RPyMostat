@@ -77,10 +77,8 @@ def update_sensor(dbconn, host_id, sensor_id, value, sensor_type=None,
         data['extra'] = extra
     logger.debug('Updating sensor %s: %s', _id, data)
     coll = get_collection(dbconn, COLL_SENSORS)
-    res = yield coll.replace_one(
-        {"_id": _id},
-        data,
-        upsert=True
+    res = yield coll.update(
+        {"_id": _id}, data, upsert=True, safe=True
     )
-    logger.debug('Update result for %s: %s (%s)', _id, res, vars(res))
+    logger.debug('Update result for %s: %s', _id, res)
     returnValue(_id)
