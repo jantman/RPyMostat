@@ -39,6 +39,8 @@ import abc  # noqa
 import logging
 import json
 
+from twisted.internet.defer import inlineCallbacks, returnValue
+
 from rpymostat.engine.site_hierarchy import SiteHierarchy
 from rpymostat.db.sensors import update_sensor
 
@@ -94,6 +96,7 @@ class Sensors(SiteHierarchy):
         """
         return json.dumps({})
 
+    @inlineCallbacks
     def update(self, _self, request):
         """
         Handle updating data from a remote sensor.
@@ -181,19 +184,26 @@ class Sensors(SiteHierarchy):
             logger.warning('Got sensor update request with no data from %s',
                            request.client.host, exc_info=1)
             request.setResponseCode(400)
-            return "Could not read request content."
+            returnValue(json.dumps(
+                    {'status': 'error',
+                     'error': "Could not read request content."}
+            ))
         if len(raw.strip()) < 1:
             request.setResponseCode(400)
             logger.warning('Got empty sensor update request from: %s',
                            request.client.host)
-            return "Empty request."
+            returnValue(
+                json.dumps({'status': 'error', 'error': "Empty Request."})
+            )
         try:
             data = json.loads(raw)
         except:
             logger.warning('Failed deserializing JSON sensor update request '
                            'from %s: %s', request.client.host, raw, exc_info=1)
             request.setResponseCode(400)
-            return "Invalid JSON."
+            returnValue(
+                json.dumps({'status': 'error', 'error': "Invalid JSON."})
+            )
         logger.debug('Received sensor update request from %s with content: %s',
                      request.client.host, data)
         request.responseHeaders.addRawHeader(
@@ -201,34 +211,34 @@ class Sensors(SiteHierarchy):
         )
         if 'host_id' not in data:
             request.setResponseCode(422)
-            return json.dumps({
+            returnValue(json.dumps({
                 'status': 'error',
                 'error': 'host_id field missing from POST data'
-            })
+            }))
         if 'sensors' not in data:
             request.setResponseCode(422)
-            return json.dumps({
+            returnValue(json.dumps({
                 'status': 'error',
                 'error': 'sensors field missing from POST data'
-            })
+            }))
         if not isinstance(data['sensors'], type({})):
             request.setResponseCode(422)
-            return json.dumps({
+            returnValue(json.dumps({
                 'status': 'error',
                 'error': 'sensors field must be a JSON object (deserialize to' \
                 ' a python dict)'
-            })
+            }))
         if len(data['sensors']) < 1:
             request.setResponseCode(422)
-            return json.dumps({
+            returnValue(json.dumps({
                 'status': 'error',
                 'error': 'sensors field must not be empty'
-            })
+            }))
         ids = []
         failed = 0
         for sensor_id, sensor_data in data['sensors'].iteritems():
             try:
-                _id = update_sensor(
+                _id = yield update_sensor(
                     self.dbconn,
                     data['host_id'],
                     sensor_id,
@@ -237,8 +247,7 @@ class Sensors(SiteHierarchy):
                     sensor_alias=sensor_data.get('alias', None),
                     extra=sensor_data.get('extra', None)
                 )
-                logger.debug('update_sensor() return value: %s (%s)',
-                             _id, type(_id))
+                logger.debug('update_sensor() return value: %s', _id)
                 ids.append(_id)
             except Exception as ex:
                 logger.error('Error updating sensor %s: %s', sensor_id,
@@ -247,11 +256,11 @@ class Sensors(SiteHierarchy):
         if failed:
             request.setResponseCode(400)
             if failed == len(data['sensors']):
-                return json.dumps({'status': 'failed'})
+                returnValue(json.dumps({'status': 'failed'}))
             else:
-                return json.dumps({
+                returnValue(json.dumps({
                     'status': 'partial', 'ids': ids,
                     'error': '%d sensor updates failed' % failed
-                })
-        request.setResponseCode(200)
-        return json.dumps({'status': 'ok', 'ids': ids})
+                }))
+        request.setResponseCode(201)
+        returnValue(json.dumps({'status': 'ok', 'ids': ids}))
