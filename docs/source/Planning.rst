@@ -1,16 +1,13 @@
 Planning
 ========
 
-|Project Status: Concept - Minimal or no implementation has been done
-yet.|
-
 A python-based intelligent home thermostat, targeted at (but not
 requiring) the RaspberryPi and similar small computers. (Originally
 "RaspberryPyMostat", for 'RaspberryPi Python Thermostat', but that's too
 long to reasonably name a Python package).
 
 Especially since the introduction of the `Nest
-thermostat <http://en.wikipedia.org/w/index.php?title=Nest_Labs&redirect=no>`__,
+thermostat <http://en.wikipedia.org/w/index.php?title=Nest_Labs&redirect=no>`_,
 a lot of people have attempted a project like this. I'd like to think
 that mine is different - perhaps more polished, perhaps it stores
 historical data in a real, logical way. Multiple temperatures are nice,
@@ -23,7 +20,7 @@ for a platform-agnostic system; a lot of the options out there are
 really hardware-hacking projects, and I want to make software that works
 with as many hardware options as it can. But when it comes down to it,
 this is an idea that I tried `a long time
-ago <https://github.com/jantman/tuxostat>`__ and never finished, and
+ago <https://github.com/jantman/tuxostat>`_ and never finished, and
 want to have another try at regardless of whether it does something
 unique or becomes just another one of the hundred pieces of software
 that do the same thing. I'm also going to be playing with some
@@ -33,11 +30,11 @@ codebase.
 
 See:
 
--  `Architecture.md <Architecture.md>`__ for an overview of the
+-  `Architecture.md <Architecture.md>`_ for an overview of the
    architecture, and most of the documentation that currently exists.
--  `DISCOVERY.md <DISCOVERY.md>`__ for some information on service
+-  `DISCOVERY.md <DISCOVERY.md>`_ for some information on service
    discovery
--  `TWISTED.md <TWISTED.md>`__ for some docs on using Twisted for this
+-  `TWISTED.md <TWISTED.md>`_ for some docs on using Twisted for this
 
 Features
 --------
@@ -70,98 +67,98 @@ Relevant Links / Similar Projects
 -  http://www.projects.privateeyepi.com/home/temperature-gauge
 -  http://m.instructables.com/id/Raspberry-Pi-Temperature-Humidity-Network-Monitor/
 -  `Raspberry Pi Thermostat Part 1: System Overview - The
-   Nooganeer <http://www.nooganeer.com/his/projects/homeautomation/raspberry-pi-thermostat-part-1-overview/>`__
--  `Willseph/RaspberryPiThermostat <https://github.com/Willseph/RaspberryPiThermostat>`__
+   Nooganeer <http://www.nooganeer.com/his/projects/homeautomation/raspberry-pi-thermostat-part-1-overview/>`_
+-  `Willseph/RaspberryPiThermostat <https://github.com/Willseph/RaspberryPiThermostat>`_
 -  `python - Thermostat Control Algorithms - Stack
-   Overflow <http://stackoverflow.com/questions/8651063/thermostat-control-algorithms>`__
+   Overflow <http://stackoverflow.com/questions/8651063/thermostat-control-algorithms>`_
 -  `VE2ZAZ - Smart Thermostat on the Raspberry
-   Pi <http://ve2zaz.net/RasTherm/RasTherm.htm>`__
+   Pi <http://ve2zaz.net/RasTherm/RasTherm.htm>`_
 -  `Raspberry Pi • View topic - Web enabled thermostat
-   project <http://www.raspberrypi.org/forums/viewtopic.php?f=37&t=24115>`__
+   project <http://www.raspberrypi.org/forums/viewtopic.php?f=37&t=24115>`_
 -  `Rubustat - the Raspberry Pi Thermostat \| Wyatt Winters \| Saving
    the world one computer at a
-   time <http://wyattwinters.com/rubustat-the-raspberry-pi-thermostat.html>`__
+   time <http://wyattwinters.com/rubustat-the-raspberry-pi-thermostat.html>`_
 -  `Makeatronics: Raspberry Pi Thermostat
-   Hookups <http://makeatronics.blogspot.com/2013/04/raspberry-pi-thermostat-hookups.html>`__
+   Hookups <http://makeatronics.blogspot.com/2013/04/raspberry-pi-thermostat-hookups.html>`_
 -  `Makeatronics: Thermostat
-   Software <http://makeatronics.blogspot.com/2013/04/thermostat-software.html>`__
+   Software <http://makeatronics.blogspot.com/2013/04/thermostat-software.html>`_
 -  `Willseph/RaspberryPiThermostat: A Raspberry Pi-powered smart
    thermostat written in Python and
-   PHP. <https://github.com/Willseph/RaspberryPiThermostat>`__ - Python
+   PHP. <https://github.com/Willseph/RaspberryPiThermostat>`_ - Python
    sensors and control but PHP LAMP web UI. MIT license. Looks like it's
    got a good bit of information, especially on wiring/setup and photos
-   of the install on `Imgur <http://imgur.com/gallery/YxElS>`__.
+   of the install on `Imgur <http://imgur.com/gallery/YxElS>`_.
 -  `ianmtaylor1/thermostat: Raspberry Pi Thermostat
-   code <https://github.com/ianmtaylor1/thermostat>`__ - Python project
+   code <https://github.com/ianmtaylor1/thermostat>`_ - Python project
    that reads 1-wire temps and uses SQLAlchemy. Relatively simple beyond
    that.
 -  `chaeron/thermostat: Raspberry Pi
-   Thermostat <https://github.com/chaeron/thermostat>`__ - Fairly nice
+   Thermostat <https://github.com/chaeron/thermostat>`_ - Fairly nice
    touchscreen UI and pretty complete, but one untested python file and
    only one physical piece.
 -  `mharizanov/ESP8266\_Relay\_Board: Three Channel WiFi
    Relay/Thermostat
-   Board <https://github.com/mharizanov/ESP8266_Relay_Board>`__ -
+   Board <https://github.com/mharizanov/ESP8266_Relay_Board>`_ -
    firmware source code and hardware designs for a WiFi relay/thermostat
    board. Probably won't use this, but interesting.
 -  `mdarty/thermostat: Raspberry Pi Thermostat
-   Controller <https://github.com/mdarty/thermostat>`__ - python/flask
+   Controller <https://github.com/mdarty/thermostat>`_ - python/flask
    app for a Python RPi thermostat.
 -  `tom91136/thermostat: A simple thermostat for RaspberryPi written in
-   Python <https://github.com/tom91136/thermostat>`__ - Another Flask,
+   Python <https://github.com/tom91136/thermostat>`_ - Another Flask,
    DS18B20 thermostat with GPIO relays.
 -  `jeffmcfadden/PiThermostat: Build a Raspberry Pi
-   Thermostat <https://github.com/jeffmcfadden/PiThermostat>`__ - Rails
+   Thermostat <https://github.com/jeffmcfadden/PiThermostat>`_ - Rails
    app for an RPi thermostat.
 -  `Forever-Young/thermostat-web: Django application for thermostat
-   control <https://github.com/Forever-Young/thermostat-web>`__ -
+   control <https://github.com/Forever-Young/thermostat-web>`_ -
    single-host
 -  `wywin/Rubustat: A thermostat controller for Raspberry Pi on
-   Flask <https://github.com/wywin/Rubustat>`__
+   Flask <https://github.com/wywin/Rubustat>`_
 -  `tommybobbins/PiThermostat: Raspberry Pi, TMP102 and 433 Transmitter
    to make an Redis based Central heating
-   system <https://github.com/tommybobbins/PiThermostat>`__ -
+   system <https://github.com/tommybobbins/PiThermostat>`_ -
    Redis-based system using Google Calendar for scheduling
 -  `jpardobl/django-thermostat: Django app to control a
-   heater <https://github.com/jpardobl/django-thermostat>`__
+   heater <https://github.com/jpardobl/django-thermostat>`_
 -  `tinkerjs/Pi-Thermostat: A Raspberry Pi based
-   thermostat <https://github.com/tinkerjs/Pi-Thermostat>`__ - Python
+   thermostat <https://github.com/tinkerjs/Pi-Thermostat>`_ - Python
    and RPi, but single-host. `Blog
-   post <http://technicalexplorer.blogspot.com/2015/08/the-thermostat.html>`__
+   post <http://technicalexplorer.blogspot.com/2015/08/the-thermostat.html>`_
    has some nice diagrams, pictures, and information on HVAC systems.
 -  `cakofony/thermostat: Web enabled thermostat project to run on the
-   raspberry pi. <https://github.com/cakofony/thermostat>`__ - Python,
+   raspberry pi. <https://github.com/cakofony/thermostat>`_ - Python,
    includes support for an Adafruit character LCD display.
 -  `Raspberry Pi Thermostat Part 1: System Overview - The
-   Nooganeer <http://www.nooganeer.com/his/projects/homeautomation/raspberry-pi-thermostat-part-1-overview/>`__
+   Nooganeer <http://www.nooganeer.com/his/projects/homeautomation/raspberry-pi-thermostat-part-1-overview/>`_
    - nice web UI demo
 -  `VE2ZAZ - Smart Thermostat on the Raspberry
-   Pi <http://ve2zaz.net/RasTherm/RasTherm.htm>`__ - Flask UI
--  `openHAB <http://www.openhab.org/>`__ - JVM-based, vendor-agnostic
+   Pi <http://ve2zaz.net/RasTherm/RasTherm.htm>`_ - Flask UI
+-  `openHAB <http://www.openhab.org/>`_ - JVM-based, vendor-agnostic
    home automation "hub". Includes web UI. Rule creation appears to be
    via a Java UI though.
 -  `home-assistant/home-assistant: Open-source home automation platform
    running on Python
-   3 <https://github.com/home-assistant/home-assistant>`__ - Python3
+   3 <https://github.com/home-assistant/home-assistant>`_ - Python3
    home automation server with web UI. Looks like it could be really
    interesting, but not sure how much support it has for the advanced
    scheduling I want.
 -  `WTherm – a smart thermostat \|
-   NiekProductions <http://niekproductions.com/p/wtherm/>`__ - Arduino,
+   NiekProductions <http://niekproductions.com/p/wtherm/>`_ - Arduino,
    PHP but has some good concepts.
 -  `Home \| pimatic - smart home automation for the raspberry
-   pi <https://pimatic.org/>`__ - node.js home automation framework.
+   pi <https://pimatic.org/>`_ - node.js home automation framework.
    Once again, doesn't have support for the kind of scheduling I want.
 -  `Matt Brenner / PyStat ·
-   GitLab <https://gitlab.com/madbrenner/PyStat>`__ - multi-threaded
+   GitLab <https://gitlab.com/madbrenner/PyStat>`_ - multi-threaded
    Ptrhon thermostat; Flask, RPi.
-   `screenshots <http://imgur.com/a/7vkZO>`__. Looks nice, but doesn't
+   `screenshots <http://imgur.com/a/7vkZO>`_. Looks nice, but doesn't
    seem to have the type of scheduling I want, and runs as a single
    process/single host.
--  `serial\_device2 <https://pypi.python.org/pypi/serial_device2/1.0>`__
+-  `serial\_device2 <https://pypi.python.org/pypi/serial_device2/1.0>`_
    - Extends serial.Serial to add methods such as auto discovery of
    available serial ports in Linux, Windows, and Mac OS X
--  `pyusbg2 <https://pypi.python.org/pypi/pyusbg2>`__ - PyUSB offers
+-  `pyusbg2 <https://pypi.python.org/pypi/pyusbg2>`_ - PyUSB offers
    easy USB devices communication in Python. It should work without
    additional code in any environment with Python >= 2.4, ctypes and an
    pre-built usb backend library (currently, libusb 0.1.x, libusb 1.x,
@@ -173,9 +170,9 @@ Some Technical Bits and Questions
 API
 +++
 
--  `raml <http://raml.org/>`__ - RESTful API Modeling Language
+-  `raml <http://raml.org/>`_ - RESTful API Modeling Language
 -  `architecting version-less
-   APIs <http://urthen.github.io/2013/05/16/ways-to-version-your-api-part-2/>`__
+   APIs <http://urthen.github.io/2013/05/16/ways-to-version-your-api-part-2/>`_
 
 Engine
 ++++++
@@ -218,7 +215,7 @@ Testing
   Mongo, and should run a Docker container of it. Need to look into how to do
   this nicely on Travis.
 - We'll need some real data fixtures, and to look into the right way to dump
-and load data from/to Mongo.
+  and load data from/to Mongo.
 -  Assuming we're going with the API-based model, unit tests should be
    simple. Integration and acceptance tests are another question.
 -  **TODO:** How to test the API server and client?
@@ -280,9 +277,9 @@ Physical Control Interface
 ++++++++++++++++++++++++++
 
 -  Wall mount tablet for the UI? There's some
-   `cheap <http://www.amazon.com/s/ref=sr_st_price-asc-rank?lo=computers&rh=n%3A172282%2Cn%3A!493964%2Cn%3A541966%2Cn%3A13896617011%2Cn%3A1232597011%2Cp_n_operating_system_browse-bin%3A3077590011&qid=1463663130&sort=price-asc-rank>`__
+   `cheap <http://www.amazon.com/s/ref=sr_st_price-asc-rank?lo=computers&rh=n%3A172282%2Cn%3A!493964%2Cn%3A541966%2Cn%3A13896617011%2Cn%3A1232597011%2Cp_n_operating_system_browse-bin%3A3077590011&qid=1463663130&sort=price-asc-rank>`_
    ones, and `AutoStart - No root - Android Apps on Google
-   Play <https://play.google.com/store/apps/details?id=com.autostart&hl=en>`__
+   Play <https://play.google.com/store/apps/details?id=com.autostart&hl=en>`_
    to autostart an app (browser) at boot...
 - Wall mount touchscreens:
   - https://www.adafruit.com/products/1892
@@ -321,19 +318,19 @@ Other Hardware
 
 -  `Miniature WiFi 802.11b/g/n Module: For Raspberry Pi and more ID: 814
    - $11.95 : Adafruit Industries, Unique & fun DIY electronics and
-   kits <https://www.adafruit.com/products/814>`__
+   kits <https://www.adafruit.com/products/814>`_
 -  `USB WiFi 802.11b/g/n Module: For Raspberry Pi and more ID: 1012 -
    $12.95 : Adafruit Industries, Unique & fun DIY electronics and
-   kits <https://www.adafruit.com/product/1012>`__
+   kits <https://www.adafruit.com/product/1012>`_
 -  `Assembled Pi Cobbler Plus - Breakout Cable for Pi B+/A+/Pi 2/Pi 3
    ID: 2029 - $6.95 : Adafruit Industries, Unique & fun DIY electronics
-   and kits <https://www.adafruit.com/products/2029>`__
+   and kits <https://www.adafruit.com/products/2029>`_
 -  `Assembled Pi T-Cobbler Plus - GPIO Breakout for RasPi A+/B+/Pi 2/Pi
    3 ID: 2028 - $7.95 : Adafruit Industries, Unique & fun DIY
-   electronics and kits <https://www.adafruit.com/products/2028>`__
+   electronics and kits <https://www.adafruit.com/products/2028>`_
 -  `GPIO Header for Raspberry Pi A+/B+/Pi 2/Pi 3 2x20 Female Header ID:
    2222 - $1.50 : Adafruit Industries, Unique & fun DIY electronics and
-   kits <https://www.adafruit.com/products/2222>`__
+   kits <https://www.adafruit.com/products/2222>`_
 -  `0.1 2x20-pin Strip Right Angle Female Header ID: 2823 - $1.50 :
    Adafruit Industries, Unique & fun DIY electronics and
-   kits <https://www.adafruit.com/products/2823>`__
+   kits <https://www.adafruit.com/products/2823>`_

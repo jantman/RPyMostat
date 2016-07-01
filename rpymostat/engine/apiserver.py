@@ -52,6 +52,11 @@ class APIServer(object):
     """
 
     # Note - docs for this are overridden in docs/source/conf.py
+    # remove_module_docstring()
+    #
+    # Also note, there's a hack in docs/source/autoklein.py for this specific
+    # attribute, as autohttp chokes on attributes of classes that require
+    # arguments to their constructor.
     app = Klein()
 
     def __init__(self, dbconn):

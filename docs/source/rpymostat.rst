@@ -11,6 +11,7 @@ Subpackages
 
 .. toctree::
 
+    rpymostat.db
     rpymostat.engine
 
 Submodules
@@ -19,6 +20,7 @@ Submodules
 .. toctree::
 
    rpymostat.config
+   rpymostat.exceptions
    rpymostat.runner
    rpymostat.version
 
