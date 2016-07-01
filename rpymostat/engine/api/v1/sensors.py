@@ -185,7 +185,10 @@ class Sensors(SiteHierarchy):
             logger.warning('Exception parsing sensor update request from %s: '
                            '%s', request.client.host, ex.message, exc_info=1)
             request.setResponseCode(400)
-            returnValue(json.dumps({'status': 'error', 'error': ex.message}))
+            returnValue(
+                json.dumps({'status': 'error', 'error': ex.message},
+                           sort_keys=True)
+            )
         logger.debug('Received sensor update request from %s with content: %s',
                      request.client.host, data)
         request.responseHeaders.addRawHeader(
@@ -196,29 +199,29 @@ class Sensors(SiteHierarchy):
             returnValue(json.dumps({
                 'status': 'error',
                 'error': 'host_id field missing from POST data'
-            }))
+            }, sort_keys=True))
         if 'sensors' not in data:
             request.setResponseCode(422)
             returnValue(json.dumps({
                 'status': 'error',
                 'error': 'sensors field missing from POST data'
-            }))
+            }, sort_keys=True))
         if not isinstance(data['sensors'], type({})):
             request.setResponseCode(422)
             returnValue(json.dumps({
                 'status': 'error',
                 'error': 'sensors field must be a JSON object (deserialize to'
                 ' a python dict)'
-            }))
+            }, sort_keys=True))
         if len(data['sensors']) < 1:
             request.setResponseCode(422)
             returnValue(json.dumps({
                 'status': 'error',
                 'error': 'sensors field must not be empty'
-            }))
+            }, sort_keys=True))
         ids = []
         failed = 0
-        for sensor_id, sensor_data in data['sensors'].iteritems():
+        for sensor_id, sensor_data in data['sensors'].items():
             try:
                 _id = yield update_sensor(
                     self.dbconn,
@@ -238,11 +241,11 @@ class Sensors(SiteHierarchy):
         if failed:
             request.setResponseCode(400)
             if failed == len(data['sensors']):
-                returnValue(json.dumps({'status': 'failed'}))
+                returnValue(json.dumps({'status': 'failed'}, sort_keys=True))
             else:
                 returnValue(json.dumps({
                     'status': 'partial', 'ids': ids,
                     'error': '%d sensor updates failed' % failed
-                }))
+                }, sort_keys=True))
         request.setResponseCode(201)
-        returnValue(json.dumps({'status': 'ok', 'ids': ids}))
+        returnValue(json.dumps({'status': 'ok', 'ids': ids}, sort_keys=True))
