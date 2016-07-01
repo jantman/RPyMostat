@@ -105,11 +105,6 @@ class AutokleinDirective(Directive):
         return res
 
     def make_rst(self):
-        # this is a hack to document the class attribute of a class that
-        # requires arguments to its constructor; without it, autohttp will
-        # fail with a TypeError.
-        if self.arguments[0] == 'rpymostat.engine.apiserver:APIServer().app':
-            self.arguments[0] = 'rpymostat.engine.apiserver:Klein()'
         app = import_object(self.arguments[0])
         if self.endpoints:
             routes = itertools.chain(*[get_routes(app, endpoint)

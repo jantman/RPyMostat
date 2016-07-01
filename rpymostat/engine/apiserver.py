@@ -53,17 +53,16 @@ class APIServer(object):
 
     # Note - docs for this are overridden in docs/source/conf.py
     # remove_module_docstring()
-    #
-    # Also note, there's a hack in docs/source/autoklein.py for this specific
-    # attribute, as autohttp chokes on attributes of classes that require
-    # arguments to their constructor.
     app = Klein()
 
-    def __init__(self, dbconn):
+    def __init__(self, dbconn=None):
         """
         Initialize API Server. Mainly just instantiates the API version classes
         (currently just :py:class:`~.APIv1`) and sets up any global/top-level
         routes.
+
+        Note: it's awful, but ``dbconn`` only has a default value to make
+        sphinxcontrib.autohttp happy.
 
         :param dbconn: MongoDB ConnectionPool
         :type dbconn: txmongo.connection.ConnectionPool

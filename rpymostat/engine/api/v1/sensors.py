@@ -121,6 +121,7 @@ class Sensors(SiteHierarchy):
         .. sourcecode:: http
 
           POST /v1/sensors/update HTTP/1.1
+          Content-Type: application/json
           Host: example.com
 
           {
