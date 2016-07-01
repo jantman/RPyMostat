@@ -47,7 +47,7 @@ with open('CHANGES.rst') as file:
     long_description += '\n' + file.read()
 
 requirements = [
-    'Twisted>=14.0.0,<15.0.0',
+    'Twisted>=16.2.0,<17.0.0',
     'klein',
     'txmongo',
     'pymongo>=3.0.0,<4.0.0'
