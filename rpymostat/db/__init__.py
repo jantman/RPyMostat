@@ -38,6 +38,7 @@ Jason Antman <jason@jasonantman.com> <http://www.jasonantman.com>
 from txmongo.connection import ConnectionPool
 from pymongo import MongoClient
 import logging
+from datetime import datetime
 
 logger = logging.getLogger(__name__)
 
@@ -84,13 +85,27 @@ def setup_mongodb(host, port):
     """
     logger.debug('Connecting to MongoDB via pymongo at %s:%s', host, port)
     try:
-        client = MongoClient(host, port, connect=True)
-        client.get_database(MONGO_DB_NAME)
+        client = MongoClient(host, port, connect=True, socketTimeoutMS=5000,
+                             connectTimeoutMS=5000,
+                             serverSelectionTimeoutMS=5000,
+                             waitQueueTimeoutMS=5000)
+        db = client.get_database(MONGO_DB_NAME)
+        # test that we can actually connect
+        client.is_primary
     except:
         logger.critical("Error connecting to MongoDB at %s:%s",
                         host, port, exc_info=1)
         raise SystemExit(1)
-    logger.debug('PyMongo connection successful.')
+    logger.info('Connected to MongoDB via pymongo at %s:%s', host, port)
+    logger.debug('Trying a DB upsert')
+    coll = db.get_collection('dbtest')
+    coll.update(
+        {'_id': 'setup_mongodb'},
+        {'_id': 'setup_mongodb', 'dt': datetime.now()},
+        upsert=True, w=1, j=True
+    )
+    client.close()
+    logger.debug('MongoDB write completed successfully.')
 
 
 def get_collection(db_conn, collection_name):
