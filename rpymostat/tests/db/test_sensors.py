@@ -50,4 +50,4 @@ else:
 pbm = 'rpymostat.db'
 
 
-class TestDBSensors(object):
+#class TestDBSensors(object):
