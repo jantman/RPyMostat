@@ -159,6 +159,13 @@ def pull_image(c):
     :param c: connected Docker client
     :type c: docker.client.Client
     """
+    for img in c.images():
+        for tag in img['RepoTags']:
+            if tag == IMAGE_NAME or tag.startswith(IMAGE_NAME):
+                sys.stderr.write('Using existing image %s (Id: %s)\n' %(
+                                 tag, img['Id']))
+                return
+    sys.stderr.write('Pulling image: %s\n' % IMAGE_NAME)
     c.pull(IMAGE_NAME)
 
 
