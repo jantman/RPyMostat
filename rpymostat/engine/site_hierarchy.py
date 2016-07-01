@@ -39,6 +39,8 @@ import abc
 import logging
 from klein.app import Klein
 from copy import deepcopy
+from rpymostat.exceptions import RequestParsingException
+import json
 
 logger = logging.getLogger(__name__)
 
@@ -131,3 +133,25 @@ class SiteHierarchy(object):
         """
         raise NotImplementedError("setup_routes must be implemented in this "
                                   "class")
+
+    def _parse_json_request(self, request):
+        """
+        Parse a JSON request; return the deserialized request or raise
+        an exception.
+
+        :param request: the request
+        :type request: instance of :class:`twisted.web.server.Request`
+        :return: deserialized request JSON
+        :rtype: str
+        """
+        try:
+            raw = request.content.getvalue()
+        except:
+            raise RequestParsingException('Could not read request content.')
+        if len(raw.strip()) < 1:
+            raise RequestParsingException('Empty Request.')
+        try:
+            data = json.loads(raw)
+        except:
+            raise RequestParsingException('Invalid JSON.')
+        return data

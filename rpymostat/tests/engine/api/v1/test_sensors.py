@@ -58,7 +58,7 @@ pb = '%s.Sensors' % pbm
 class TestClass(Sensors):
 
     def __init__(self, app, prefix):
-        pass
+        self.dbconn = Mock()
 
 
 class TestSensors(object):
@@ -94,76 +94,25 @@ class TestSensors(object):
         }
         req_json = json.dumps(req_data)
         mock_req = MagicMock(spec_set=Request)
+        type(mock_req).responseHeaders = Mock()
         mock_req.content.getvalue.return_value = req_json
         type(mock_req).client = Mock(host='myhost')
         with patch('%s.logger' % pbm, autospec=True) as mock_logger:
-            res = self.cls.update(None, mock_req)
-        assert res == 'sensor updated.'
-        assert mock_req.mock_calls == [
-            call.content.getvalue(),
-            call.setResponseCode(200)
-        ]
+            with patch('%s._parse_json_request' % pb) as mock_parse:
+                with patch('%s.update_sensor' % pbm, autospec=True) as mock_upd:
+                    mock_upd.return_value = 'myid'
+                    mock_parse.return_value = req_data
+                    res = self.cls.update(None, mock_req)
+        assert res.result == '{"status": "ok", "ids": ["myid"]}'
+        assert mock_parse.mock_calls == [call(mock_req)]
+        assert mock_req.mock_calls == [call.setResponseCode(201)]
         assert mock_logger.mock_calls == [
             call.debug(
                 'Received sensor update request from %s with content: %s',
                 'myhost',
                 req_data
-            )
-        ]
-
-    def test_update_cant_read_request(self):
-
-        def se_exc():
-            raise Exception()
-
-        mock_req = MagicMock(spec_set=Request)
-        mock_req.content.getvalue.side_effect = se_exc
-        type(mock_req).client = Mock(host='myhost')
-        with patch('%s.logger' % pbm, autospec=True) as mock_logger:
-            res = self.cls.update(None, mock_req)
-        assert res == 'Could not read request content.'
-        assert mock_req.mock_calls == [
-            call.content.getvalue(),
-            call.setResponseCode(400)
-        ]
-        assert mock_logger.mock_calls == [
-            call.warning('Got sensor update request with no data from %s',
-                         'myhost', exc_info=1)
-        ]
-
-    def test_update_empty_request(self):
-        mock_req = MagicMock(spec_set=Request)
-        mock_req.content.getvalue.return_value = ''
-        type(mock_req).client = Mock(host='myhost')
-        with patch('%s.logger' % pbm, autospec=True) as mock_logger:
-            res = self.cls.update(None, mock_req)
-        assert res == 'Empty request.'
-        assert mock_req.mock_calls == [
-            call.content.getvalue(),
-            call.setResponseCode(400)
-        ]
-        assert mock_logger.mock_calls == [
-            call.warning(
-                'Got empty sensor update request from: %s', 'myhost'
-            )
-        ]
-
-    def test_update_not_json(self):
-        mock_req = MagicMock(spec_set=Request)
-        mock_req.content.getvalue.return_value = 'foo bar'
-        type(mock_req).client = Mock(host='myhost')
-        with patch('%s.logger' % pbm, autospec=True) as mock_logger:
-            res = self.cls.update(None, mock_req)
-        assert res == 'Invalid JSON.'
-        assert mock_req.mock_calls == [
-            call.content.getvalue(),
-            call.setResponseCode(400)
-        ]
-        assert mock_logger.mock_calls == [
-            call.warning(
-                'Failed deserializing JSON sensor update request from %s: %s',
-                'myhost', 'foo bar', exc_info=1
-            )
+            ),
+            call.debug('update_sensor() return value: %s', 'myid')
         ]
 
     @pytest.mark.integration

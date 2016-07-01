@@ -37,6 +37,8 @@ Jason Antman <jason@jasonantman.com> <http://www.jasonantman.com>
 
 import sys
 import pytest
+from freezegun import freeze_time
+from freezegun.api import FakeDatetime
 
 from rpymostat.db import (
     MONGO_DB_NAME, connect_mongodb, setup_mongodb, get_collection
@@ -103,18 +105,35 @@ class TestDBInit(object):
                           'mongodb://myhost:1234', exc_info=1)
         ]
 
+    @freeze_time('2015-01-10 12:13:14')
     def test_setup_mongodb(self):
         with patch('%s.MongoClient' % pbm, autospec=True) as mock_client:
             with patch('%s.logger' % pbm, autospec=True) as mock_logger:
                 setup_mongodb('h', 12)
         assert mock_client.mock_calls == [
-            call('h', 12, connect=True),
-            call().get_database(MONGO_DB_NAME)
+            call('h', 12, connect=True, connectTimeoutMS=5000,
+                 serverSelectionTimeoutMS=5000, socketTimeoutMS=5000,
+                 waitQueueTimeoutMS=5000),
+            call().get_database(MONGO_DB_NAME),
+            call().get_database().get_collection('dbtest'),
+            call().get_database().get_collection().update(
+                {'_id': 'setup_mongodb'},
+                {'dt': FakeDatetime(2015, 1, 10, 12, 13, 14),
+                 '_id': 'setup_mongodb'
+                 },
+                j=True,
+                upsert=True,
+                w=1
+            ),
+            call().close()
         ]
         assert mock_logger.mock_calls == [
             call.debug('Connecting to MongoDB via pymongo at %s:%s',
                        'h', 12),
-            call.debug('PyMongo connection successful.')
+            call.info('Connected to MongoDB via pymongo at %s:%s',
+                      'h', 12),
+            call.debug('Trying a DB upsert'),
+            call.debug('MongoDB write completed successfully.')
         ]
 
     def test_setup_mongodb_exception(self):
@@ -129,7 +148,9 @@ class TestDBInit(object):
                     setup_mongodb('h', 12)
         assert excinfo.value.code == 1
         assert mock_client.mock_calls == [
-            call('h', 12, connect=True)
+            call('h', 12, connect=True, connectTimeoutMS=5000,
+                 serverSelectionTimeoutMS=5000, socketTimeoutMS=5000,
+                 waitQueueTimeoutMS=5000)
         ]
         assert mock_logger.mock_calls == [
             call.debug('Connecting to MongoDB via pymongo at %s:%s',

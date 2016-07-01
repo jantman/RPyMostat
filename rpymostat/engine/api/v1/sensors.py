@@ -43,6 +43,7 @@ from twisted.internet.defer import inlineCallbacks, returnValue
 
 from rpymostat.engine.site_hierarchy import SiteHierarchy
 from rpymostat.db.sensors import update_sensor
+from rpymostat.exceptions import RequestParsingException
 
 logger = logging.getLogger(__name__)
 
@@ -179,31 +180,12 @@ class Sensors(SiteHierarchy):
         :statuscode 201: update has been made in the database
         """
         try:
-            raw = request.content.getvalue()
-        except:
-            logger.warning('Got sensor update request with no data from %s',
-                           request.client.host, exc_info=1)
+            data = self._parse_json_request(request)
+        except RequestParsingException as ex:
+            logger.warning('Exception parsing sensor update request from %s: '
+                           '%s', request.client.host, ex.message, exc_info=1)
             request.setResponseCode(400)
-            returnValue(json.dumps(
-                    {'status': 'error',
-                     'error': "Could not read request content."}
-            ))
-        if len(raw.strip()) < 1:
-            request.setResponseCode(400)
-            logger.warning('Got empty sensor update request from: %s',
-                           request.client.host)
-            returnValue(
-                json.dumps({'status': 'error', 'error': "Empty Request."})
-            )
-        try:
-            data = json.loads(raw)
-        except:
-            logger.warning('Failed deserializing JSON sensor update request '
-                           'from %s: %s', request.client.host, raw, exc_info=1)
-            request.setResponseCode(400)
-            returnValue(
-                json.dumps({'status': 'error', 'error': "Invalid JSON."})
-            )
+            returnValue(json.dumps({'status': 'error', 'error': ex.message}))
         logger.debug('Received sensor update request from %s with content: %s',
                      request.client.host, data)
         request.responseHeaders.addRawHeader(
@@ -225,7 +207,7 @@ class Sensors(SiteHierarchy):
             request.setResponseCode(422)
             returnValue(json.dumps({
                 'status': 'error',
-                'error': 'sensors field must be a JSON object (deserialize to' \
+                'error': 'sensors field must be a JSON object (deserialize to'
                 ' a python dict)'
             }))
         if len(data['sensors']) < 1:
