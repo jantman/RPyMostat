@@ -95,7 +95,7 @@ class Sensors(SiteHierarchy):
 
         :statuscode 200: no errors
         """
-        return json.dumps({})
+        return json.dumps({}, sort_keys=True)
 
     @inlineCallbacks
     def update(self, _self, request):

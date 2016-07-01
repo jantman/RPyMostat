@@ -112,7 +112,7 @@ class Status(SiteHierarchy):
         request.responseHeaders.addRawHeader(
             b"content-type", b"application/json"
         )
-        resp = json.dumps(status)
+        resp = json.dumps(status, sort_keys=True)
         if is_ok:
             request.setResponseCode(200)
         else:

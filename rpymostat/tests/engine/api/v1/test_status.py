@@ -92,7 +92,7 @@ class TestStatus(object):
         expected = json.dumps({
             'status': True,
             'dependencies': {'mongodb': True}
-        })
+        }, sort_keys=True)
         assert mock_headers.mock_calls == [
             call.addRawHeader(
                 b"content-type", b"application/json")
@@ -128,7 +128,7 @@ class TestStatus(object):
         expected = json.dumps({
             'status': False,
             'dependencies': {'mongodb': False}
-        })
+        }, sort_keys=True)
         assert mock_headers.mock_calls == [
             call.addRawHeader(
                 b"content-type", b"application/json")
