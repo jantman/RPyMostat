@@ -295,7 +295,8 @@ texinfo_documents = [
 # Example configuration for intersphinx: refer to the Python standard library.
 intersphinx_mapping = {
     'python': ('http://docs.python.org/2.7', None),
-    'twisted': ('http://twistedmatrix.com/documents/current/api/', None)
+    'twisted': ('http://twistedmatrix.com/documents/current/api/', None),
+    'txmongo': ('http://txmongo.readthedocs.io/en/latest/', None)
 }
 
 autoclass_content = 'class'
