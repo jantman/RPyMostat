@@ -48,8 +48,8 @@ with open('CHANGES.rst') as file:
 
 requirements = [
     'Twisted>=16.2.0,<17.0.0',
-    'klein',
-    'txmongo',
+    'klein>=15.0.0,<16.0.0',
+    'txmongo>=16.0.0,<17.0.0',
     'pymongo>=3.0.0,<4.0.0'
 ]
     
