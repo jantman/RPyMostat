@@ -202,7 +202,7 @@ UI
 - visual schedule overlay like PagerDuty
 - [tastejs/todomvc: Helping you select an MV* framework - Todo apps for Backbone.js, Ember.js, AngularJS, and many more](https://github.com/tastejs/todomvc) / [TodoMVC](http://todomvc.com/)
 - https://en.wikipedia.org/wiki/HATEOAS
-- __looks good__ - [Writing a Javascript REST client - miguelgrinberg.com](http://blog.miguelgrinberg.com/post/writing-a-javascript-rest-client) - [Twitter Bootstrap](http://twitter.github.io/bootstrap/) for presentation (see [fluid layout model](http://getbootstrap.com/2.3.2/examples/fluid.html)), [Knockout](http://knockoutjs.com/) for MVC.
+- **looks good** - [Writing a Javascript REST client - miguelgrinberg.com](http://blog.miguelgrinberg.com/post/writing-a-javascript-rest-client) - [Twitter Bootstrap](http://twitter.github.io/bootstrap/) for presentation (see [fluid layout model](http://getbootstrap.com/2.3.2/examples/fluid.html)), [Knockout](http://knockoutjs.com/) for MVC.
 - [vinta/awesome-python: A curated list of awesome Python frameworks, libraries, software and resources](https://github.com/vinta/awesome-python#database-drivers)
 - [Ajenti Core - a Web-UI Toolkit](http://ajenti.org/core/) - has a really nice UI, and is Python on the backend
 - [Backbone.js](http://backbonejs.org/) - might be good... it's an in-browser MVC. A little worried about memory use.
