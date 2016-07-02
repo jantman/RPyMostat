@@ -40,7 +40,6 @@ Jason Antman <jason@jasonantman.com> <http://www.jasonantman.com>
 import os
 from subprocess import Popen, PIPE
 from signal import SIGINT
-import time
 
 
 class AcceptanceHelper(object):
