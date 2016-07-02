@@ -45,21 +45,25 @@ import requests
 import json
 
 
-def assert_resp_code(r, code):
+def assert_resp_code(r, code, extra_info=None):
     """
     Assert about a response code, with a helpful message.
     :param r: response
     :type r: requests.models.Response
     :param code: expected response code
     :type code: int
+    :param extra_info: extra text to include in message
+    :type extra_info: str
     """
     msg = "Expected status code to be %s but got %s\n%s" % (
         code, r.status_code, response_info(r)
     )
+    if extra_info is not None:
+        msg += "\nExtra Info:\n" + extra_info
     assert r.status_code == code, msg
 
 
-def assert_resp_json(r, d):
+def assert_resp_json(r, d, extra_info=None):
     """
     Assert about a response JSON content, with a helpful message.
 
@@ -67,6 +71,8 @@ def assert_resp_json(r, d):
     :type r: requests.models.Response
     :param d: json dict
     :type d: dict
+    :param extra_info: extra text to include in message
+    :type extra_info: str
     """
     try:
         raw = r.json()
@@ -79,6 +85,8 @@ def assert_resp_json(r, d):
         json.dumps(d, sort_keys=True, indent=4, separators=(',', ':')),
         j, response_info(r)
     )
+    if extra_info is not None:
+        msg += "\nExtra Info:\n" + extra_info
     assert raw == d, msg
 
 

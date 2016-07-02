@@ -147,10 +147,10 @@ class TestAcceptanceSensors(object):
         proc.start()
 
         r = acceptance_put('/v1/sensors/update', req_data)
-        assert_resp_code(r, 201)
-        assert_resp_json(r, {'status': 'ok', 'ids': [_id]})
-
         proc.stop()
+        assert_resp_code(r, 201, proc.err)
+        assert_resp_json(r, {'status': 'ok', 'ids': [_id]}, proc.err)
+
         proc.assert_in_err('MongoDB write completed successfully')
         proc.assert_in_err('listening on port 8088')
         proc.assert_in_err('reactor.run() returned')
