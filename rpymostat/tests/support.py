@@ -39,6 +39,7 @@ Jason Antman <jason@jasonantman.com> <http://www.jasonantman.com>
 
 import os
 from subprocess import Popen, PIPE
+from signal import SIGINT
 import time
 
 
@@ -63,21 +64,45 @@ class AcceptanceHelper(object):
         self.stderr = None
         self.returncode = None
 
+    @property
+    def out(self):
+        return self.stdout
+
+    @property
+    def err(self):
+        return self.stderr
+
+    @property
+    def return_code(self):
+        return self.returncode
+
     def start(self):
         """
         Start the RPyMostat process.
         """
-        cwd = os.path.abspath(os.path.join(os.path.abspath(__file__), '..'))
+        travis_dir = os.environ.get('TRAVIS_BUILD_DIR', None)
+        if travis_dir is not None:
+            cwd = travis_dir
+        else:
+            cwd = os.path.abspath(
+                os.path.join(os.path.abspath(__file__), '..', '..', '..')
+            )
         self.process = Popen(self.args, cwd=cwd, stdout=PIPE, stderr=PIPE)
 
     def stop(self):
-        self.process.terminate()
-        count = 0
-        while count < 100:
-            if self.process.pid is not None:
-                self.process.kill()
-                time.sleep(0.1)
-            else:
-                break
+        """stop process with a CTRL_C_EVENT, simulating Ctrl+C / SIGINT"""
+        # if we try to terminate() or kill(), coverage isn't recorded
+        self.process.send_signal(SIGINT)
         self.stdout, self.stderr = self.process.communicate()
         self.returncode = self.process.returncode
+
+    def _error_for_assertion(self, expected, s):
+        return 'expected "%s" to be in:\n%s' % (expected, s)
+
+    def assert_in_out(self, s):
+        """assert s in stdout; print a useful error message"""
+        assert s in self.stdout, self._error_for_assertion(s, self.stdout)
+
+    def assert_in_err(self, s):
+        """assert s in stderr; print a useful error message"""
+        assert s in self.stderr, self._error_for_assertion(s, self.stderr)
