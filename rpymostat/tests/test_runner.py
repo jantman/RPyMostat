@@ -98,9 +98,10 @@ class TestRunner(object):
                 mocks['Config'].return_value.get.side_effect = se_config_get
                 mocks['parse_args'].return_value = mock_args
                 mocks['connect_mongodb'].return_value = self.mock_mongo
-                main([])
+                with patch.object(sys, 'argv', ['bad', 'foo', 'bar']):
+                    main()
         assert mocks['show_config'].mock_calls == []
-        assert mocks['parse_args'].mock_calls == [call([])]
+        assert mocks['parse_args'].mock_calls == [call(['foo', 'bar'])]
         assert mocks['connect_mongodb'].mock_calls == [call('mhost', 1234)]
         assert mocks['APIServer'].mock_calls == [
             call(self.mock_mongo),
@@ -161,8 +162,9 @@ class TestRunner(object):
                 mocks['Config'].return_value.get.side_effect = se_config_get
                 mocks['parse_args'].return_value = mock_args
                 mocks['connect_mongodb'].return_value = self.mock_mongo
-                with pytest.raises(SystemExit) as excinfo:
-                    main([])
+                with patch.object(sys, 'argv', []):
+                    with pytest.raises(SystemExit) as excinfo:
+                        main()
         assert excinfo.value.code == 1
         assert mocks['show_config'].mock_calls == [
             call(mocks['Config'].return_value)
@@ -251,7 +253,7 @@ class TestRunner(object):
             ) as mocks:
                 mocks['Config'].return_value.get.side_effect = se_config_get
                 mocks['parse_args'].return_value = mock_args
-                main([])
+                main()
         assert mocks['PythonLoggingObserver'].mock_calls == [
             call(),
             call().start()
@@ -291,7 +293,7 @@ class TestRunner(object):
             ) as mocks:
                 mocks['Config'].return_value.get.side_effect = se_config_get
                 mocks['parse_args'].return_value = mock_args
-                main([])
+                main()
         assert mocks['PythonLoggingObserver'].mock_calls == [
             call(),
             call().start()
@@ -331,7 +333,7 @@ class TestRunner(object):
             ) as mocks:
                 mocks['Config'].return_value.get.side_effect = se_config_get
                 mocks['parse_args'].return_value = mock_args
-                main([])
+                main()
         assert mocks['PythonLoggingObserver'].mock_calls == [
             call(),
             call().start()
@@ -371,7 +373,7 @@ class TestRunner(object):
             ) as mocks:
                 mocks['Config'].return_value.get.side_effect = se_config_get
                 mocks['parse_args'].return_value = mock_args
-                main([])
+                main()
         assert mocks['PythonLoggingObserver'].mock_calls == [
             call(),
             call().start()
