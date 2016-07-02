@@ -131,16 +131,15 @@ def set_log_level_format(level, format):
     logger.setLevel(level)
 
 
-def main(argv=None):
+def main(args=None):
     """
     Run the Engine API server
     """
     conf = Config()
 
     # parse args
-    if argv is None:
-        argv = sys.argv[1:]
-    args = parse_args(argv)
+    if args is None:
+        args = parse_args(sys.argv[1:])
 
     # handle show_config
     if args.show_config:
