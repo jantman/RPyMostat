@@ -38,7 +38,7 @@ script:
   - tox -r
 
 after_success:
-  - codecov
+  - codecov -F $TOXENV
 
 notifications:
   email:
