@@ -40,6 +40,97 @@ Jason Antman <jason@jasonantman.com> <http://www.jasonantman.com>
 import os
 from subprocess import Popen, PIPE
 from signal import SIGINT
+from retrying import retry
+import requests
+import json
+
+
+def assert_resp_code(r, code):
+    """
+    Assert about a response code, with a helpful message.
+    :param r: response
+    :type r: requests.models.Response
+    :param code: expected response code
+    :type code: int
+    """
+    msg = "Expected status code to be %s but got %s\n%s" % (
+        code, r.status_code, response_info(r)
+    )
+    assert r.status_code == code, msg
+
+
+def assert_resp_json(r, d):
+    """
+    Assert about a response JSON content, with a helpful message.
+
+    :param r: response
+    :type r: requests.models.Response
+    :param d: json dict
+    :type d: dict
+    """
+    try:
+        raw = r.json()
+        j = json.dumps(
+            raw, sort_keys=True, indent=4, separators=(',', ':')
+        )
+    except:
+        j = raw = r.content
+    msg = "Expected response JSON of:\n%s\nBut got:\n%s\n%s" %(
+        json.dumps(d, sort_keys=True, indent=4, separators=(',', ':')),
+        j, response_info(r)
+    )
+    assert raw == d, msg
+
+
+def response_info(r):
+    """
+    Provide a string of information about a HTTP response, for use in assertion
+    messages.
+
+    :param r: response
+    :type r: requests.models.Response
+    """
+    s = "HTTP %s %s from: %s (in %s)\n" % (
+        r.status_code, r.reason, r.url, r.elapsed
+    )
+    s += "Headers:\n"
+    for k in sorted(r.headers.keys()):
+        s += "\t%s: %s\n" % (k, r.headers[k])
+    if len(r.history) > 0:
+        s += "History: %s\n" % r.history
+    s += "Content:\n%s\n" % r.content
+    try:
+        s += "JSON:\n%s\n" % r.json()
+    except:
+        pass
+    return s
+
+
+def retry_on_ConnectionError(exc):
+    return isinstance(exc, requests.exceptions.ConnectionError)
+
+
+@retry(stop_max_attempt_number=40, wait_fixed=250,
+       retry_on_exception=retry_on_ConnectionError)
+def acceptance_put(path, data):
+    """
+    keep trying a PUT until we don't get a ConnectionError,
+    while we wait for it to come up.
+
+    This waits up to 10 seconds, with 250ms between each try.
+    Only retry on requests.exceptions.ConnectionError
+
+    :param path: path to PUT to
+    :type path: str
+    :param data: data to PUT
+    :type data: dict
+    :return: response
+    :rtype: requests.models.Response
+    """
+    if not path.startswith('/'):
+        path = '/' + path
+    url = 'http://localhost:8088%s' % path
+    return requests.put(url, json=data)
 
 
 class AcceptanceHelper(object):
@@ -92,7 +183,14 @@ class AcceptanceHelper(object):
         """stop process with a CTRL_C_EVENT, simulating Ctrl+C / SIGINT"""
         # if we try to terminate() or kill(), coverage isn't recorded
         self.process.send_signal(SIGINT)
-        self.stdout, self.stderr = self.process.communicate()
+        stdout, stderr = self.process.communicate()
+        if not isinstance(stdout, type('')):
+            # python3 - they're bytes
+            self.stdout = stdout.decode("utf-8")
+            self.stderr = stderr.decode("utf-8")
+        else:
+            self.stdout = stdout
+            self.stderr = stderr
         self.returncode = self.process.returncode
 
     def _error_for_assertion(self, expected, s):

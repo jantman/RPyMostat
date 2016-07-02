@@ -37,10 +37,12 @@ Jason Antman <jason@jasonantman.com> <http://www.jasonantman.com>
 import sys
 import json
 import pytest
-import time
 
 from rpymostat.engine.api.v1.sensors import Sensors
-from rpymostat.tests.support import AcceptanceHelper
+from rpymostat.tests.support import (
+    AcceptanceHelper, acceptance_put, assert_resp_code, assert_resp_json
+)
+from rpymostat.db import MONGO_DB_NAME, COLL_SENSORS
 from twisted.web.server import Request
 
 # https://code.google.com/p/mock/issues/detail?id=249
@@ -124,7 +126,12 @@ class TestAcceptanceSensors(object):
     def setup(self):
         pass
 
-    def test_acceptance_update(self, docker_mongodb):
+    def test_acceptance_update_new(self, docker_mongodb):
+        # get DB and clear it
+        _id = 'myhostid_sensor1'
+        coll = docker_mongodb[MONGO_DB_NAME][COLL_SENSORS]
+        coll.delete_many({'_id': _id})
+
         req_data = {
             'host_id': 'myhostid',
             'sensors': {
@@ -136,21 +143,26 @@ class TestAcceptanceSensors(object):
                 }
             }
         }
-        req_json = json.dumps(req_data)
-        mock_req = MagicMock(spec_set=Request)
-        type(mock_req).responseHeaders = Mock()
-        mock_req.content.getvalue.return_value = req_json
-        type(mock_req).client = Mock(host='myhost')
-        """
-        @TODO - acceptance test - set the current value in Mongo,
-        send a request, check the response and the new Mongo value.
-        """
         proc = AcceptanceHelper()
         proc.start()
-        time.sleep(3)
+
+        r = acceptance_put('/v1/sensors/update', req_data)
+        assert_resp_code(r, 201)
+        assert_resp_json(r, {'status': 'ok', 'ids': [_id]})
+
         proc.stop()
         proc.assert_in_err('MongoDB write completed successfully')
         proc.assert_in_err('listening on port 8088')
         proc.assert_in_err('reactor.run() returned')
         assert proc.out == ''
         assert proc.return_code == 0
+
+        assert coll.find_one({'_id': _id}) == {
+            'sensor_id': 'sensor1',
+            'alias': 's1alias',
+            'last_reading_C': 12.345,
+            'host_id': 'myhostid',
+            '_id': _id,
+            'type': 's1type',
+            'extra': 'extraS1'
+        }
