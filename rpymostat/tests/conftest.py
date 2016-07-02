@@ -71,14 +71,6 @@ except ImportError:
     pass
 
 
-def pytest_addoption(parser):
-    """
-    Add option to run Docker MongoDB container to pytest.
-    """
-    parser.addoption('--docker-mongo', action='store_true', default=False,
-                     help='Run MongoDB Docker container if not TravisCI')
-
-
 @pytest.fixture(scope="session", autouse=True)
 def docker_mongodb(request):
     """
@@ -90,9 +82,9 @@ def docker_mongodb(request):
     :rtype: pymongo.MongoClient
     """
     # don't do anything if we're not in an acceptance test environment
-    if not request.config.getoption('--docker-mongo'):
+    if "'-m', 'acceptance'" not in str(request.config._origargs):
         sys.stderr.write(
-            "\nnot running mongodb - not specified on command line\n"
+            "\nnot running mongodb - not run with '-m acceptance'\n"
         )
         return None
 
