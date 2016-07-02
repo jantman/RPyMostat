@@ -36,3 +36,48 @@ AUTHORS:
 Jason Antman <jason@jasonantman.com> <http://www.jasonantman.com>
 ##################################################################################
 """
+
+import os
+from subprocess import Popen, PIPE
+import time
+
+
+class AcceptanceHelper(object):
+    """
+    Helper to run rpymostat (engine) inside `coverage`, for acceptance tests.
+    """
+
+    def __init__(self, args=['-vv']):
+        """
+        Initialize an AcceptanceHelper, with optional arguments to pass to
+        `rpymostat`.
+
+        :param args: optional arguments to pass to rpymostat
+        :type args: list
+        """
+        self.args = ['coverage', 'run', '--branch', '--append', '-m',
+                     'rpymostat.runner']
+        self.args.extend(args)
+        self.process = None
+        self.stdout = None
+        self.stderr = None
+        self.returncode = None
+
+    def start(self):
+        """
+        Start the RPyMostat process.
+        """
+        cwd = os.path.abspath(os.path.join(os.path.abspath(__file__), '..'))
+        self.process = Popen(self.args, cwd=cwd, stdout=PIPE, stderr=PIPE)
+
+    def stop(self):
+        self.process.terminate()
+        count = 0
+        while count < 100:
+            if self.process.pid is not None:
+                self.process.kill()
+                time.sleep(0.1)
+            else:
+                break
+        self.stdout, self.stderr = self.process.communicate()
+        self.returncode = self.process.returncode

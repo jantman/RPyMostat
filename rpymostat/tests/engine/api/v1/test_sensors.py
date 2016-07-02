@@ -143,3 +143,4 @@ class TestAcceptanceSensors(object):
         @TODO - acceptance test - set the current value in Mongo,
         send a request, check the response and the new Mongo value.
         """
+        assert 1 == 1

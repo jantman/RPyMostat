@@ -41,6 +41,7 @@ import pytest
 import sys
 import os
 import logging
+import coverage
 
 # suppress docker logging
 docker_log = logging.getLogger("docker")
@@ -69,6 +70,36 @@ try:
     HAVE_MONGO = True
 except ImportError:
     pass
+
+
+@pytest.fixture(scope="session", autouse=True)
+def acceptance_coverage(request):
+    """
+    Run coverage reports for acceptance tests.
+
+    :param request: pytest config
+    :type request: TestConfig::test_init
+    :return:
+    """
+    # don't do anything if we're not in an acceptance test environment
+    if "'-m', 'acceptance'" not in str(request.config._origargs):
+        sys.stderr.write(
+            "\nnot running mongodb - not run with '-m acceptance'\n"
+        )
+        return None
+    cov = coverage.Coverage()
+    cov.erase()
+
+    # finalizer to generate coverage reports for acceptance tests
+    def generate_report():
+        cov = coverage.Coverage()
+        cov.load()
+        cov.html_report(directory='htmlcov',
+                        title='RPyMostat Acceptance Test Coverage')
+        cov.xml_report(outfile='coverage.xml')
+        cov.report()
+
+    request.addfinalizer(generate_report)
 
 
 @pytest.fixture(scope="session", autouse=True)
