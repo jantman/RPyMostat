@@ -121,7 +121,6 @@ class Sensors(SiteHierarchy):
         .. sourcecode:: http
 
           POST /v1/sensors/update HTTP/1.1
-          Content-Type: application/json
           Host: example.com
 
           {
@@ -167,7 +166,7 @@ class Sensors(SiteHierarchy):
 
         .. sourcecode:: http
 
-          HTTP/1.1 422
+          HTTP/1.1 422 Unprocessable Entity
           Content-Type: application/json
 
           {"status": "error", "error": "host_id field is missing"}
