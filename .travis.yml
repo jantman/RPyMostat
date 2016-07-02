@@ -27,10 +27,10 @@ matrix:
       env: TOXENV=acceptance3 PIP_DOWNLOAD_CACHE=$HOME/.pip-cache
 
 script:
-  - testscript.sh
+  - ./testscript.sh
 
 after_success:
-  - after_success.sh -F $TOXENV
+  - ./after_success.sh -F $TOXENV
 
 notifications:
   email:
