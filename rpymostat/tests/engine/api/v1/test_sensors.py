@@ -73,7 +73,7 @@ class TestSensors(object):
         with patch('%s.add_route' % pb, autospec=True) as mock_add_route:
             self.cls.setup_routes()
         assert mock_add_route.mock_calls == [
-            call(self.cls, self.cls.update, 'update', methods=['POST']),
+            call(self.cls, self.cls.update, 'update', methods=['PUT']),
             call(self.cls, self.cls.list)
         ]
 

@@ -57,7 +57,7 @@ class Sensors(SiteHierarchy):
 
     def setup_routes(self):
         """Setup routes for subparts of the hierarchy."""
-        self.add_route(self.update, 'update', methods=['POST'])
+        self.add_route(self.update, 'update', methods=['PUT'])
         # /sensors returns a list
         self.add_route(self.list)
 
@@ -102,7 +102,7 @@ class Sensors(SiteHierarchy):
         """
         Handle updating data from a remote sensor.
 
-        This serves :http:post:`/v1/sensors/update` endpoint.
+        This serves :http:put:`/v1/sensors/update` endpoint.
 
         @TODO Handle sensor data update.
 
@@ -120,7 +120,7 @@ class Sensors(SiteHierarchy):
 
         .. sourcecode:: http
 
-          POST /v1/sensors/update HTTP/1.1
+          PUT /v1/sensors/update HTTP/1.1
           Host: example.com
 
           {
