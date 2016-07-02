@@ -37,8 +37,10 @@ Jason Antman <jason@jasonantman.com> <http://www.jasonantman.com>
 import sys
 import json
 import pytest
+import time
 
 from rpymostat.engine.api.v1.sensors import Sensors
+from rpymostat.tests.support import AcceptanceHelper
 from twisted.web.server import Request
 
 # https://code.google.com/p/mock/issues/detail?id=249
@@ -143,4 +145,12 @@ class TestAcceptanceSensors(object):
         @TODO - acceptance test - set the current value in Mongo,
         send a request, check the response and the new Mongo value.
         """
-        assert 1 == 1
+        proc = AcceptanceHelper()
+        proc.start()
+        time.sleep(3)
+        proc.stop()
+        proc.assert_in_err('MongoDB write completed successfully')
+        proc.assert_in_err('listening on port 8088')
+        proc.assert_in_err('reactor.run() returned')
+        assert proc.out == ''
+        assert proc.return_code == 0
