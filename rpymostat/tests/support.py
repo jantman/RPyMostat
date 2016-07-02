@@ -75,7 +75,7 @@ def assert_resp_json(r, d):
         )
     except:
         j = raw = r.content
-    msg = "Expected response JSON of:\n%s\nBut got:\n%s\n%s" %(
+    msg = "Expected response JSON of:\n%s\nBut got:\n%s\n%s" % (
         json.dumps(d, sort_keys=True, indent=4, separators=(',', ':')),
         j, response_info(r)
     )
