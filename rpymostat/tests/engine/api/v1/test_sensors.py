@@ -115,8 +115,14 @@ class TestSensors(object):
             call.debug('update_sensor() return value: %s', 'myid')
         ]
 
-    @pytest.mark.integration
-    def test_integration_update(self, docker_mongodb):
+
+@pytest.mark.acceptance
+class TestAcceptanceSensors(object):
+
+    def setup(self):
+        pass
+
+    def test_acceptance_update(self, docker_mongodb):
         req_data = {
             'host_id': 'myhostid',
             'sensors': {
@@ -134,6 +140,6 @@ class TestSensors(object):
         mock_req.content.getvalue.return_value = req_json
         type(mock_req).client = Mock(host='myhost')
         """
-        @TODO - integration test - set the current value in Mongo,
+        @TODO - acceptance test - set the current value in Mongo,
         send a request, check the response and the new Mongo value.
         """

@@ -39,10 +39,10 @@ Testing is done via `pytest <http://pytest.org/latest/>`_, driven by `tox <http:
 
 * If you want to pass additional arguments to pytest, add them to the tox command line after "--". i.e., for verbose pytext output on py27 tests: ``tox -e py27 -- -v``
 
-Integration Tests
------------------
+Acceptance Tests
+----------------
 
-Integration tests run against a real MongoDB. When running locally, they assume
+Acceptance tests run against a real MongoDB. When running locally, they assume
 that Docker is present and usable, and will pull and run a container from
 `jantman/mongodb24 <https://hub.docker.com/r/jantman/mongodb24/>`_. When running
 on TravisCI, they will use the `mongodb service <https://docs.travis-ci.com/user/database-setup/#MongoDB>`_
@@ -51,7 +51,7 @@ provided by Travis. The Travis MongoDB service currently `runs <https://travis-c
 that we're targeting. If Travis upgrades that, we may need to look into alternate
 ways of running Mongo for the Travis tests.
 
-By default, when run locally, the integration tests will start up the MongoDB
+By default, when run locally, the acceptance tests will start up the MongoDB
 container when the test session starts, and stop and remove it when the session
 is over. To leave the container running and reuse it for further test sessions,
 export the ``LEAVE_MONGO_RUNNING`` environment variable.

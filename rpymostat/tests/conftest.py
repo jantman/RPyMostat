@@ -89,7 +89,7 @@ def docker_mongodb(request):
     :return: mongodb connection
     :rtype: pymongo.MongoClient
     """
-    # don't do anything if we're not in an integration test environment
+    # don't do anything if we're not in an acceptance test environment
     if not request.config.getoption('--docker-mongo'):
         sys.stderr.write(
             "\nnot running mongodb - not specified on command line\n"
