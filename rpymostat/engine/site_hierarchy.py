@@ -148,6 +148,9 @@ class SiteHierarchy(object):
             raw = request.content.getvalue()
         except:
             raise RequestParsingException('Could not read request content.')
+        # handle python3
+        if not isinstance(raw, type('')):
+            raw = raw.decode('utf-8')
         if len(raw.strip()) < 1:
             raise RequestParsingException('Empty Request.')
         try:

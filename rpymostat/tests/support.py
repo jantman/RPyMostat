@@ -114,31 +114,74 @@ def response_info(r):
     return s
 
 
+def acceptance_request(path, method='get', json_data=None):
+    """
+    Helper for running requests against rpymostat (engine) for acceptance tests.
+    Runs the engine via :py:class:`~.AcceptanceHelper`, triggers a request
+    against it, then returns a 2-tuple of the response and the AcceptanceHelper
+    instance. If the request fails with a ConnectionError (despite retries),
+    raises an exception with some helpful information.
+
+    :param path: the path to request
+    :type path: str
+    :param method: HTTP method (a method in the `requests` module)
+    :type method: str
+    :param json_data: optional data to pass as the method's ``json`` kwarg.
+    :type json_data: dict
+    :returns: 2-tuple of (requests.models.Response, AcceptanceHelper)
+    """
+    method = method.lower()
+    func = getattr(requests, method)
+    if not path.startswith('/'):
+        path = '/' + path
+    url = 'http://localhost:8088%s' % path
+    kwargs = {}
+    if json_data is not None:
+        kwargs['json'] = json_data
+    proc = AcceptanceHelper()
+    proc.start()
+    try:
+        r = _acceptance_do_request(func, url, **kwargs)
+    except requests.exceptions.ConnectionError as ex:
+        proc.stop()
+        msg = "Error in accptance_request(%s, method=%s, json_data=%s)\n" % (
+            path, method, json_data
+        )
+        msg += "caught requests.exceptions.ConnectionError requesting "
+        msg += "%s\n" % url
+        msg += "Acceptance process exited %d\n" % proc.return_code
+        msg += "STDOUT:\n%s\nSTDERR:\n%s\n" % (proc.out, proc.err)
+        raise Exception(msg)
+    # success
+    proc.stop()
+    return (r, proc)
+
+
+
 def retry_on_ConnectionError(exc):
+    print("Got ConnectionError; retrying")
     return isinstance(exc, requests.exceptions.ConnectionError)
 
 
 @retry(stop_max_attempt_number=40, wait_fixed=250,
        retry_on_exception=retry_on_ConnectionError)
-def acceptance_put(path, data):
+def _acceptance_do_request(func, url, **kwargs):
     """
-    keep trying a PUT until we don't get a ConnectionError,
+    keep trying a request until we don't get a ConnectionError,
     while we wait for it to come up.
 
     This waits up to 10 seconds, with 250ms between each try.
     Only retry on requests.exceptions.ConnectionError
 
-    :param path: path to PUT to
-    :type path: str
-    :param data: data to PUT
-    :type data: dict
-    :return: response
+    :param func: function to call
+    :type func: callable
+    :param url: url to request
+    :type url: str
+    :param kwargs: args to the function
+    :type kwargs: dict
     :rtype: requests.models.Response
     """
-    if not path.startswith('/'):
-        path = '/' + path
-    url = 'http://localhost:8088%s' % path
-    return requests.put(url, json=data)
+    return func(url, **kwargs)
 
 
 class AcceptanceHelper(object):
@@ -190,7 +233,10 @@ class AcceptanceHelper(object):
     def stop(self):
         """stop process with a CTRL_C_EVENT, simulating Ctrl+C / SIGINT"""
         # if we try to terminate() or kill(), coverage isn't recorded
-        self.process.send_signal(SIGINT)
+        try:
+            self.process.send_signal(SIGINT)
+        except:
+            pass
         stdout, stderr = self.process.communicate()
         if not isinstance(stdout, type('')):
             # python3 - they're bytes

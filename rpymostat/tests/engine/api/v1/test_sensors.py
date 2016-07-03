@@ -37,10 +37,11 @@ Jason Antman <jason@jasonantman.com> <http://www.jasonantman.com>
 import sys
 import json
 import pytest
+from requests.exceptions import ConnectionError
 
 from rpymostat.engine.api.v1.sensors import Sensors
 from rpymostat.tests.support import (
-    AcceptanceHelper, acceptance_put, assert_resp_code, assert_resp_json
+    acceptance_request, assert_resp_code, assert_resp_json
 )
 from rpymostat.db import MONGO_DB_NAME, COLL_SENSORS
 from twisted.web.server import Request
@@ -143,11 +144,9 @@ class TestAcceptanceSensors(object):
                 }
             }
         }
-        proc = AcceptanceHelper()
-        proc.start()
-
-        r = acceptance_put('/v1/sensors/update', req_data)
-        proc.stop()
+        r, proc = acceptance_request(
+            '/v1/sensors/update', method='put', json_data=req_data
+        )
         assert_resp_code(r, 201, proc.err)
         assert_resp_json(r, {'status': 'ok', 'ids': [_id]}, proc.err)
 
