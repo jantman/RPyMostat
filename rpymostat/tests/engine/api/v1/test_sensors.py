@@ -37,7 +37,6 @@ Jason Antman <jason@jasonantman.com> <http://www.jasonantman.com>
 import sys
 import json
 import pytest
-from requests.exceptions import ConnectionError
 
 from rpymostat.engine.api.v1.sensors import Sensors
 from rpymostat.tests.support import (

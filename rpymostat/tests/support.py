@@ -142,7 +142,7 @@ def acceptance_request(path, method='get', json_data=None):
     proc.start()
     try:
         r = _acceptance_do_request(func, url, **kwargs)
-    except requests.exceptions.ConnectionError as ex:
+    except requests.exceptions.ConnectionError:
         proc.stop()
         msg = "Error in accptance_request(%s, method=%s, json_data=%s)\n" % (
             path, method, json_data
@@ -155,7 +155,6 @@ def acceptance_request(path, method='get', json_data=None):
     # success
     proc.stop()
     return (r, proc)
-
 
 
 def retry_on_ConnectionError(exc):
