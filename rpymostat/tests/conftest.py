@@ -42,6 +42,7 @@ import sys
 import os
 import logging
 import coverage
+from StringIO import StringIO
 
 # suppress docker logging
 docker_log = logging.getLogger("docker")
@@ -89,17 +90,6 @@ def acceptance_coverage(request):
         return None
     cov = coverage.Coverage()
     cov.erase()
-
-    # finalizer to generate coverage reports for acceptance tests
-    def generate_report():
-        cov = coverage.Coverage()
-        cov.load()
-        cov.html_report(directory='htmlcov',
-                        title='RPyMostat Acceptance Test Coverage')
-        cov.xml_report(outfile='coverage.xml')
-        cov.report()
-
-    request.addfinalizer(generate_report)
 
 
 @pytest.fixture(scope="session", autouse=True)
