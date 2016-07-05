@@ -42,7 +42,6 @@ import sys
 import os
 import logging
 import coverage
-from StringIO import StringIO
 
 # suppress docker logging
 docker_log = logging.getLogger("docker")
