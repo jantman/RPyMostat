@@ -43,7 +43,7 @@ from twisted.internet.defer import inlineCallbacks, returnValue
 logger = logging.getLogger(__name__)
 
 
-@inlineCallbacks
+#@inlineCallbacks
 def update_sensor(dbconn, host_id, sensor_id, value, sensor_type=None,
                   sensor_alias=None, extra=None):
     """
@@ -81,4 +81,6 @@ def update_sensor(dbconn, host_id, sensor_id, value, sensor_type=None,
         {"_id": _id}, data, upsert=True, safe=True
     )
     logger.debug('Update result for %s: %s', _id, res)
+    if res['ok'] != 1:
+        raise Exception('Update of sensor %s failed: %s', _id, res)
     returnValue(_id)
