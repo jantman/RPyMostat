@@ -44,6 +44,7 @@ from rpymostat.tests.support import (
 )
 from rpymostat.db import MONGO_DB_NAME, COLL_SENSORS
 from twisted.web.server import Request
+from datetime import datetime
 
 # https://code.google.com/p/mock/issues/detail?id=249
 # py>=3.4 should use unittest.mock not the mock package on pypi
@@ -143,11 +144,13 @@ class TestAcceptanceSensors(object):
                 }
             }
         }
+        before = datetime.now()
         r, proc = acceptance_request(
             '/v1/sensors/update', method='put', json_data=req_data
         )
         assert_resp_code(r, 201, proc.err)
         assert_resp_json(r, {'status': 'ok', 'ids': [_id]}, proc.err)
+        after = datetime.now()
 
         proc.assert_in_err('MongoDB write completed successfully')
         proc.assert_in_err('listening on port 8088')
@@ -155,12 +158,14 @@ class TestAcceptanceSensors(object):
         assert proc.out == ''
         assert proc.return_code == 0
 
-        assert coll.find_one({'_id': _id}) == {
-            'sensor_id': 'sensor1',
-            'alias': 's1alias',
-            'last_reading_C': 12.345,
-            'host_id': 'myhostid',
-            '_id': _id,
-            'type': 's1type',
-            'extra': 'extraS1'
-        }
+        res= coll.find_one({'_id': _id})
+        assert res['sensor_id'] == 'sensor1'
+        assert res['alias'] == 's1alias'
+        assert res['last_reading_C'] == 12.345
+        assert res['host_id'] == 'myhostid'
+        assert res['_id'] == _id
+        assert res['type'] == 's1type'
+        assert res['extra'] == 'extraS1'
+        assert res['update_time'] >= before
+        assert res['update_time'] <= after
+        assert len(res) == 8
