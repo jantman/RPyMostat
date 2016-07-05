@@ -158,7 +158,7 @@ class TestAcceptanceSensors(object):
         assert proc.out == ''
         assert proc.return_code == 0
 
-        res= coll.find_one({'_id': _id})
+        res = coll.find_one({'_id': _id})
         assert res['sensor_id'] == 'sensor1'
         assert res['alias'] == 's1alias'
         assert res['last_reading_C'] == 12.345
