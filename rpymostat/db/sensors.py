@@ -43,7 +43,7 @@ from twisted.internet.defer import inlineCallbacks, returnValue
 logger = logging.getLogger(__name__)
 
 
-#@inlineCallbacks
+@inlineCallbacks
 def update_sensor(dbconn, host_id, sensor_id, value, sensor_type=None,
                   sensor_alias=None, extra=None):
     """

@@ -43,6 +43,23 @@ from signal import SIGINT
 from retrying import retry
 import requests
 import json
+from twisted.python.failure import Failure
+from traceback import format_tb
+
+
+def assert_not_twisted_failure(res):
+    """
+    Assert that a result is not a twisted.python.failure.Failure; if it is,
+    print information about the failure.
+
+    :param res: result
+    """
+    if not isinstance(res, Failure):
+        return
+    msg = 'ERROR: Deferred returned a Failure:' + "\n"
+    msg += res.getErrorMessage() + "\n"
+    msg += "\n".join(format_tb(res.getTracebackObject()))
+    assert isinstance(res, Failure) is False, msg
 
 
 def assert_resp_code(r, code, extra_info=None):

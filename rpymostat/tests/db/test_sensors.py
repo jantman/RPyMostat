@@ -36,6 +36,10 @@ Jason Antman <jason@jasonantman.com> <http://www.jasonantman.com>
 """
 
 import sys
+from rpymostat.db import MONGO_DB_NAME, COLL_SENSORS
+from rpymostat.db.sensors import update_sensor
+from txmongo.collection import Collection
+from rpymostat.tests.support import assert_not_twisted_failure
 
 # https://code.google.com/p/mock/issues/detail?id=249
 # py>=3.4 should use unittest.mock not the mock package on pypi
@@ -48,3 +52,38 @@ else:
     from unittest.mock import patch, call, Mock, DEFAULT  # noqa
 
 pbm = 'rpymostat.db'
+
+
+class TestSensors(object):
+
+    def test_update_no_kwargs(self):
+        mock_db = Mock(name='mock_db')
+        mock_dbconn = Mock(name='mock_dbconn')
+        setattr(mock_dbconn, MONGO_DB_NAME, mock_db)
+        mock_coll = Mock(spec_set=Collection)
+        setattr(mock_db, COLL_SENSORS, mock_coll)
+        mock_coll.update.return_value = {
+            'updatedExisting': True,
+            'connectionId': 1,
+            'ok': 1.0,
+            'err': None,
+            'n': 1
+        }
+        res = update_sensor(
+            mock_dbconn,
+            'myhost',
+            'mysensor',
+            123.45
+        )
+        data = {
+            '_id': 'myhost_mysensor',
+            'host_id': 'myhost',
+            'sensor_id': 'mysensor',
+            'last_reading_C': 123.45
+        }
+        assert_not_twisted_failure(res.result)
+        assert res.result == 'myhost_mysensor'
+        assert mock_coll.mock_calls == [
+            call.update({'_id': 'myhost_mysensor'}, data, upsert=True,
+                        safe=True)
+        ]
