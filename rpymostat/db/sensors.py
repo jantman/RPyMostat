@@ -36,6 +36,7 @@ Jason Antman <jason@jasonantman.com> <http://www.jasonantman.com>
 """
 
 import logging
+from datetime import datetime
 
 from rpymostat.db import COLL_SENSORS, get_collection
 from twisted.internet.defer import inlineCallbacks, returnValue
@@ -68,7 +69,7 @@ def update_sensor(dbconn, host_id, sensor_id, value, sensor_type=None,
     """
     _id = '%s_%s' % (host_id, sensor_id)
     data = {'_id': _id, 'host_id': host_id, 'sensor_id': sensor_id,
-            'last_reading_C': value}
+            'last_reading_C': value, 'update_time': datetime.now()}
     if sensor_type is not None:
         data['type'] = sensor_type
     if sensor_alias is not None:

@@ -40,6 +40,8 @@ from rpymostat.db import MONGO_DB_NAME, COLL_SENSORS
 from rpymostat.db.sensors import update_sensor
 from txmongo.collection import Collection
 from rpymostat.tests.support import assert_not_twisted_failure
+from freezegun import freeze_time
+from datetime import datetime
 
 # https://code.google.com/p/mock/issues/detail?id=249
 # py>=3.4 should use unittest.mock not the mock package on pypi
@@ -56,6 +58,7 @@ pbm = 'rpymostat.db'
 
 class TestSensors(object):
 
+    @freeze_time("2016-07-01 02:03:04")
     def test_update_no_kwargs(self):
         mock_db = Mock(name='mock_db')
         mock_dbconn = Mock(name='mock_dbconn')
@@ -79,7 +82,8 @@ class TestSensors(object):
             '_id': 'myhost_mysensor',
             'host_id': 'myhost',
             'sensor_id': 'mysensor',
-            'last_reading_C': 123.45
+            'last_reading_C': 123.45,
+            'update_time': datetime(2016, 7, 1, 2, 3, 4)
         }
         assert_not_twisted_failure(res.result)
         assert res.result == 'myhost_mysensor'
