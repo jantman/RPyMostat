@@ -273,6 +273,21 @@ MongoDB 2.4. Raspbian has it for ARM.
 - `txmongo <https://github.com/twisted/txmongo>`_ and its `docs <https://txmongo.readthedocs.io/en/latest/>`_
 - txmongo `twisted.web example <https://github.com/twisted/txmongo/blob/master/examples/webapps/twistedweb_server.tac>`_
 
+Time-Series:
+
+- `Schema Design for Time Series Data in MongoD - MongoDB Blog <http://blog.mongodb.org/post/65517193370/schema-design-for-time-series-data-in-mongodb>`_
+- `Time Series <http://learnmongodbthehardway.com/schema/chapter6/>`_
+- `MongoDB for Time Series Data Part 1: Setting the Stage for Sensor Management | MongoDB <https://www.mongodb.com/presentations/mongodb-time-series-data-part-1-setting-stage-sensor-management>`_
+- `MongoDB for Time Series Data | MongoDB <https://www.mongodb.com/presentations/mongodb-time-series-data>`_
+- `Efficient storage of non-periodic time series with MongoDB <https://bluxte.net/musings/2015/01/21/efficient-storage-non-periodic-time-series-mongodb/>`_
+- `Capped Collections — MongoDB Manual 3.2 <https://docs.mongodb.com/manual/core/capped-collections/>`_
+- `MongoDB tech behind our time series graphs - 30TB per month <https://blog.serverdensity.com/tech-behind-time-series-graphs-2bn-docs-per-day-30tb-per-month/>`_
+- `Make Interactive Time Series Charts for IoT Using Live MongoDB Data | SlamData <http://slamdata.com/news-and-blog/2016/04/18/make-interactive-time-series-charts-for-iot-using-live-mongodb-data/>`_
+- `Storing time-series data with MongoDB and TokuMX <https://www.percona.com/blog/2015/05/26/storing-time-series-data-with-mongodb-and-tokumx/>`_
+- `MongoDB Time Series: Introducing the Aggregation Framework - DZone Database <https://dzone.com/articles/mongodb-time-series>`_
+- `comSysto Blog: Processing and analysing sensor data <https://comsysto.com/blog-post/processing-and-analysing-sensor-data>`_
+- `MongoDB time series: Introducing the aggregation framework | Vlad Mihalcea's Blog <https://vladmihalcea.com/2014/01/10/mongodb-time-series-introducing-the-aggregation-framework/>`_
+
 Physical Control Interface
 ++++++++++++++++++++++++++
 
