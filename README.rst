@@ -16,6 +16,10 @@ RPyMostat
    :target: https://codecov.io/github/jantman/rpymostat?branch=master
    :alt: coverage report for master branch
 
+.. image:: https://badge.waffle.io/jantman/RPyMostat.png?label=ready&title=Ready
+   :target: https://waffle.io/jantman/RPyMostat
+   :alt: 'Stories in Ready - waffle.io'
+
 .. image:: http://www.repostatus.org/badges/0.1.0/concept.svg
    :alt: Project Status: Concept - Minimal or no implementation has been done yet.
    :target: http://www.repostatus.org/#concept
