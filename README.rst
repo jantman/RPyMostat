@@ -20,8 +20,8 @@ RPyMostat
    :target: https://waffle.io/jantman/RPyMostat
    :alt: 'Stories in Ready - waffle.io'
 
-.. image:: http://www.repostatus.org/badges/0.1.0/concept.svg
-   :alt: Project Status: Concept - Minimal or no implementation has been done yet.
+.. image:: http://www.repostatus.org/badges/2.0.0/concept.svg
+   :alt: Project Status: Concept – Minimal or no implementation has been done yet, or the repository is only intended to be a limited example, demo, or proof-of-concept.
    :target: http://www.repostatus.org/#concept
 
 A python-based modular intelligent home thermostat, targeted at (but not requiring) the RaspberryPi and similar small computers, with a documented open API. (Originally "RaspberryPyMostat", for 'RaspberryPi Python Thermostat', but that's too long to reasonably name a Python package).
