@@ -1,28 +1,9 @@
 RPyMostat
 =========
 
-.. image:: https://pypip.in/v/rpymostat/badge.png
-   :target: https://crate.io/packages/rpymostat
-
-.. image:: https://pypip.in/d/rpymostat/badge.png
-   :target: https://crate.io/packages/rpymostat
-
-
-.. image:: https://secure.travis-ci.org/jantman/rpymostat.png?branch=master
-   :target: http://travis-ci.org/jantman/rpymostat
-   :alt: travis-ci for master branch
-
-.. image:: https://codecov.io/github/jantman/rpymostat/coverage.svg?branch=master
-   :target: https://codecov.io/github/jantman/rpymostat?branch=master
-   :alt: coverage report for master branch
-
-.. image:: https://badge.waffle.io/jantman/RPyMostat.png?label=ready&title=Ready
-   :target: https://waffle.io/jantman/RPyMostat
-   :alt: 'Stories in Ready - waffle.io'
-
-.. image:: http://www.repostatus.org/badges/2.0.0/concept.svg
-   :alt: Project Status: Concept – Minimal or no implementation has been done yet, or the repository is only intended to be a limited example, demo, or proof-of-concept.
-   :target: http://www.repostatus.org/#concept
+.. image:: http://www.repostatus.org/badges/latest/abandoned.svg
+   :alt: Project Status: Abandoned – Initial development has started, but there has not yet been a stable, usable release; the project has been abandoned and the author(s) do not intend on continuing development.
+   :target: http://www.repostatus.org/#abandoned
 
 A python-based modular intelligent home thermostat, targeted at (but not requiring) the RaspberryPi and similar small computers, with a documented open API. (Originally "RaspberryPyMostat", for 'RaspberryPi Python Thermostat', but that's too long to reasonably name a Python package).
 
@@ -35,7 +16,7 @@ This repository will hold the main Engine component
 Status
 ------
 
-Work-in-progress. Not even functional.
+**This Project is Abandoned.** I started work on it and decided not to continue. I doubt I ever will, but I'm leaving the code up nonetheless.
 
 Architecture
 ------------
